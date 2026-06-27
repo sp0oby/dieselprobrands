@@ -68,10 +68,10 @@ export default async function CartPage() {
                 />
                 {(l.volumeLabel || nextTier) && (
                   <div className="px-4 pb-4 sm:px-6">
-                    <div className="rounded-md border border-emerald-500/15 bg-emerald-500/5 px-3 py-2 text-xs text-emerald-200">
+                    <div className="rounded-md border border-emerald-500/15 bg-emerald-500/5 px-3 py-2 text-xs text-emerald-700">
                       {l.volumeLabel && <span><TrendingDown className="mr-1 inline size-3" /> Volume discount applied ({l.volumeLabel})</span>}
                       {nextTier && (
-                        <span className="ml-2 text-emerald-200/70">
+                        <span className="ml-2 text-emerald-700/70">
                           Add {nextTier.minQty - l.quantity} more for {Math.round(nextTier.rate * 100)}% off.
                         </span>
                       )}
@@ -118,7 +118,7 @@ export default async function CartPage() {
             </div>
           </dl>
           {priced.tier !== "retail" && (
-            <p className="mt-4 inline-flex items-center gap-1 text-xs text-emerald-300">
+            <p className="mt-4 inline-flex items-center gap-1 text-xs text-emerald-700">
               <BadgePercent className="size-3.5" /> You saved {formatPrice(priced.retailSubtotalCents - priced.subtotalAfterDiscountsCents + priced.promoDiscountCents)} vs. retail.
             </p>
           )}
@@ -133,7 +133,7 @@ export default async function CartPage() {
 }
 
 function Row({ k, v, large, accent }: { k: string; v: string; large?: boolean; accent?: "emerald" }) {
-  const valueClass = accent === "emerald" ? "text-emerald-300" : large ? "text-base font-bold text-ink" : "text-ink";
+  const valueClass = accent === "emerald" ? "text-emerald-700" : large ? "text-base font-bold text-ink" : "text-ink";
   return (
     <div className="flex justify-between">
       <dt className={large ? "text-base font-semibold text-ink" : "text-ink-muted"}>{k}</dt>

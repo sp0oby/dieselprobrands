@@ -44,7 +44,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            <Link href={`/brands/${brand?.slug}`} className="text-sm font-bold uppercase tracking-wider text-brand-400 hover:text-brand-300">
+            <Link href={`/brands/${brand?.slug}`} className="text-sm font-bold uppercase tracking-wider text-brand-400 hover:text-brand-600">
               {brand?.name}
             </Link>
             <span className="text-ink-dim">•</span>
@@ -64,9 +64,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           <div className="flex items-center gap-2 text-sm">
             {product.inStock ? (
-              <><Check className="size-4 text-emerald-400" /><span className="text-emerald-400">In stock</span><span className="text-ink-muted">— {product.stockQty} units available</span></>
+              <><Check className="size-4 text-emerald-600" /><span className="text-emerald-600">In stock</span><span className="text-ink-muted">— {product.stockQty} units available</span></>
             ) : (
-              <span className="text-amber-400">Out of stock</span>
+              <span className="text-amber-600">Out of stock</span>
             )}
           </div>
 
@@ -96,7 +96,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   <Link
                     key={n}
                     href={`/search/oem/${encodeURIComponent(n)}`}
-                    className="rounded-md border border-black/10 bg-bg-panel px-2.5 py-1 font-mono text-xs text-brand-400 hover:border-brand/40 hover:text-brand-300"
+                    className="rounded-md border border-black/10 bg-bg-panel px-2.5 py-1 font-mono text-xs text-brand-400 hover:border-brand/40 hover:text-brand-600"
                   >
                     {n}
                   </Link>
@@ -154,7 +154,7 @@ async function PriceBlock({ product }: { product: { id: string; priceCents: numb
         <span className="text-4xl font-extrabold text-ink">{formatPrice(yourUnit)}</span>
         <span className="text-lg text-ink-dim line-through">{formatPrice(product.priceCents)}</span>
       </div>
-      <p className="mt-1 text-sm text-emerald-300">Save {formatPrice(savings)} ({Math.round(tierRate * 100)}% off retail)</p>
+      <p className="mt-1 text-sm text-emerald-700">Save {formatPrice(savings)} ({Math.round(tierRate * 100)}% off retail)</p>
     </div>
   );
 }
@@ -167,7 +167,7 @@ function VolumeLadder({ retailCents }: { retailCents: number }) {
         {VOLUME_TIERS.slice().reverse().map((t) => (
           <li key={t.minQty} className="flex justify-between">
             <span>{t.label}</span>
-            <span className="text-emerald-300">−{Math.round(t.rate * 100)}% per unit</span>
+            <span className="text-emerald-700">−{Math.round(t.rate * 100)}% per unit</span>
           </li>
         ))}
       </ul>

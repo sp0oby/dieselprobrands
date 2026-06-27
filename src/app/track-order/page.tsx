@@ -78,7 +78,7 @@ export default async function TrackOrderPage({ searchParams }: { searchParams: P
         </form>
 
         {errorMsg && (
-          <p className="mt-6 rounded-md border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">
+          <p className="mt-6 rounded-md border border-amber-300 bg-amber-100 p-4 text-sm text-amber-800">
             {errorMsg}
           </p>
         )}
@@ -141,7 +141,7 @@ export default async function TrackOrderPage({ searchParams }: { searchParams: P
           )}
 
           <p className="mt-6 text-center text-sm text-ink-muted">
-            Need help? <Link href="/contact" className="text-brand-400 hover:text-brand-300">Contact our team</Link> with your order number.
+            Need help? <Link href="/contact" className="text-brand-400 hover:text-brand-600">Contact our team</Link> with your order number.
           </p>
         </div>
       )}

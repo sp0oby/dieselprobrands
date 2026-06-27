@@ -78,7 +78,7 @@ export function ReturnForm({ orderId, items }: { orderId: string; items: Item[] 
                   <p className="mt-1 font-mono text-[11px] text-ink-dim">{it.sku}</p>
                   <p className="mt-2 text-xs text-ink-muted">
                     Ordered: {it.quantity} · {disabled
-                      ? <span className="text-amber-300">already returned</span>
+                      ? <span className="text-amber-700">already returned</span>
                       : `up to ${remaining} returnable`}
                   </p>
                 </div>
@@ -129,7 +129,7 @@ export function ReturnForm({ orderId, items }: { orderId: string; items: Item[] 
           <Textarea id="note" value={note} onChange={(e) => setNote(e.target.value)} rows={4} placeholder="Anything our team should know" />
         </div>
 
-        {error && <p className="text-sm text-amber-300">{error}</p>}
+        {error && <p className="text-sm text-amber-700">{error}</p>}
 
         <Button type="submit" size="lg" disabled={pending} className="w-full">
           {pending ? "Submitting…" : "Submit Return Request"}
@@ -140,7 +140,7 @@ export function ReturnForm({ orderId, items }: { orderId: string; items: Item[] 
 }
 
 function Row({ k, v, large, accent }: { k: string; v: string; large?: boolean; accent?: "amber" }) {
-  const valueClass = accent === "amber" ? "text-amber-300" : large ? "text-base font-bold text-ink" : "text-ink";
+  const valueClass = accent === "amber" ? "text-amber-700" : large ? "text-base font-bold text-ink" : "text-ink";
   return (
     <div className="flex justify-between">
       <dt className={large ? "text-base font-semibold text-ink" : "text-ink-muted"}>{k}</dt>

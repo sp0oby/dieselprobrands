@@ -60,7 +60,7 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
             <Row label="Brand" cells={products.map((p) => BRANDS.find((b) => b.slug === p.brand)?.displayName ?? p.brand)} />
             <Row label="Category" cells={products.map((p) => CATEGORIES.find((c) => c.slug === p.category)?.name ?? p.category)} />
             <Row label="Rating" cells={products.map((p) => <StarRating value={p.rating} count={p.reviewCount} />)} />
-            <Row label="In stock" cells={products.map((p) => p.inStock ? <span className="text-emerald-400">Yes ({p.stockQty})</span> : <span className="text-amber-400">No</span>)} />
+            <Row label="In stock" cells={products.map((p) => p.inStock ? <span className="text-emerald-600">Yes ({p.stockQty})</span> : <span className="text-amber-600">No</span>)} />
             {specKeys.map((k) => (
               <Row key={k} label={k} cells={products.map((p) => p.specs?.[k] ?? <span className="text-ink-dim">—</span>)} />
             ))}

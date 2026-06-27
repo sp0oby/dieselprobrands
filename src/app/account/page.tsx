@@ -27,8 +27,8 @@ export default async function AccountOverviewPage() {
       <BusinessAppFinalizer />
 
       {pendingApp?.status === "pending" && (
-        <div className="card-surface p-4 flex items-start gap-3 border-amber-500/20 bg-amber-500/[0.04]">
-          <Clock className="size-5 text-amber-400 shrink-0 mt-0.5" />
+        <div className="card-surface p-4 flex items-start gap-3 border-amber-300 bg-amber-500/[0.04]">
+          <Clock className="size-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-ink">Business application under review</p>
             <p className="text-xs text-ink-muted">Submitted {new Date(pendingApp.createdAt).toLocaleDateString()} — typically 1–2 business days.</p>

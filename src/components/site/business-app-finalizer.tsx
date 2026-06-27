@@ -37,14 +37,14 @@ export function BusinessAppFinalizer() {
 
   if (state === "done") {
     return (
-      <div className="rounded-md border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-200 flex items-start gap-2">
+      <div className="rounded-md border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-700 flex items-start gap-2">
         <CheckCircle2 className="size-4 mt-0.5 shrink-0" />
         <p>Your business application was submitted. We'll respond within 1–2 business days.</p>
       </div>
     );
   }
   if (state === "submitting") {
-    return <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">Finalizing your business application…</div>;
+    return <div className="rounded-md border border-amber-300 bg-amber-100 p-4 text-sm text-amber-800">Finalizing your business application…</div>;
   }
   return null;
 }

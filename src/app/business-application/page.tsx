@@ -27,7 +27,7 @@ export default async function BusinessApplicationPage() {
     return (
       <div className="container-x py-16">
         <div className="card-surface mx-auto max-w-xl p-8 text-center">
-          <CheckCircle2 className="mx-auto size-10 text-emerald-400" />
+          <CheckCircle2 className="mx-auto size-10 text-emerald-600" />
           <h1 className="mt-4 text-3xl font-bold text-ink">You're approved</h1>
           <p className="mt-2 text-ink-muted">
             Your account is set as <Badge variant="brand">{profile.tier}</Badge> with business pricing applied at checkout.
@@ -45,7 +45,7 @@ export default async function BusinessApplicationPage() {
     return (
       <div className="container-x py-16">
         <div className="card-surface mx-auto max-w-xl p-8">
-          <Clock className="mx-auto size-10 text-amber-400" />
+          <Clock className="mx-auto size-10 text-amber-600" />
           <h1 className="mt-4 text-center text-2xl font-bold text-ink">Application under review</h1>
           <p className="mt-2 text-center text-sm text-ink-muted">
             Submitted {new Date(latest.createdAt).toLocaleDateString()}. We typically respond within 1–2 business days.
@@ -70,7 +70,7 @@ export default async function BusinessApplicationPage() {
         </p>
 
         {latest?.status === "rejected" && (
-          <div className="mt-6 rounded-md border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200 flex gap-2">
+          <div className="mt-6 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-700 flex gap-2">
             <XCircle className="size-4 mt-0.5 shrink-0" />
             <div>
               <p>Your previous application was not approved.</p>

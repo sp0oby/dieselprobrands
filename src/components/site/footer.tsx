@@ -13,7 +13,7 @@ export function SiteFooter() {
             <div className="space-y-1 text-sm text-ink-muted">
               <p>📍 {SITE.address.street}</p>
               <p>{SITE.address.city}, {SITE.address.state} {SITE.address.zip}</p>
-              <p>📞 <a href={SITE.phoneHref} className="text-brand-400 hover:text-brand-300">{SITE.phone}</a></p>
+              <p>📞 <a href={SITE.phoneHref} className="text-brand-400 hover:text-brand-600">{SITE.phone}</a></p>
               <p>{SITE.address.city}, {SITE.address.state}</p>
             </div>
           </div>

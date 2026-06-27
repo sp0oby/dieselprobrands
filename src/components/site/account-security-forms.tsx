@@ -31,7 +31,7 @@ export function EmailChangeForm({ currentEmail }: { currentEmail: string }) {
         <Button type="submit" disabled={pending || email === currentEmail}>Update email</Button>
       </div>
       {msg && (
-        <p className={`sm:col-span-2 text-xs ${msg.kind === "ok" ? "text-emerald-300" : "text-amber-300"}`}>{msg.text}</p>
+        <p className={`sm:col-span-2 text-xs ${msg.kind === "ok" ? "text-emerald-700" : "text-amber-700"}`}>{msg.text}</p>
       )}
     </form>
   );
@@ -70,7 +70,7 @@ export function PasswordChangeForm() {
         <Button type="submit" disabled={pending}>Update password</Button>
       </div>
       {msg && (
-        <p className={`sm:col-span-2 text-xs ${msg.kind === "ok" ? "text-emerald-300" : "text-amber-300"}`}>{msg.text}</p>
+        <p className={`sm:col-span-2 text-xs ${msg.kind === "ok" ? "text-emerald-700" : "text-amber-700"}`}>{msg.text}</p>
       )}
     </form>
   );

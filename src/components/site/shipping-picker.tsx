@@ -47,7 +47,7 @@ export function ShippingPicker({
                   <p className="text-xs text-ink-muted">{m.etaDays}{m.description ? ` · ${m.description}` : ""}</p>
                 </div>
               </div>
-              <span className={cn("text-sm font-semibold", rate?.isFree ? "text-emerald-300" : "text-ink")}>
+              <span className={cn("text-sm font-semibold", rate?.isFree ? "text-emerald-700" : "text-ink")}>
                 {rate?.isFree ? "FREE" : rate ? formatPrice(rate.cents) : "—"}
               </span>
             </div>

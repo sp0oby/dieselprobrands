@@ -84,7 +84,7 @@ export default function ContactPage() {
             <div className="card-surface p-6">
               <h3 className="text-lg font-bold text-ink">Need Immediate Help?</h3>
               <p className="mt-2 text-sm text-ink-muted">Call our support line for urgent inquiries and real-time assistance.</p>
-              <a href={SITE.phoneHref} className="mt-4 inline-flex items-center gap-2 text-lg font-bold text-brand-400 hover:text-brand-300">
+              <a href={SITE.phoneHref} className="mt-4 inline-flex items-center gap-2 text-lg font-bold text-brand-400 hover:text-brand-600">
                 <Phone className="size-5" /> {SITE.phone}
               </a>
             </div>

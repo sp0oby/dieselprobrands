@@ -96,7 +96,7 @@ export function JobsList({ jobs, careersEmail }: { jobs: Job[]; careersEmail: st
                 <span>Posted {new Date(job.postedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
                 <button
                   onClick={() => setOpenId(isOpen ? null : job.id)}
-                  className="inline-flex items-center gap-1 text-brand-400 hover:text-brand-300"
+                  className="inline-flex items-center gap-1 text-brand-400 hover:text-brand-600"
                 >
                   {isOpen ? "Hide details" : "View full description"}
                   <ChevronDown className={cn("size-3 transition-transform", isOpen && "rotate-180")} />

@@ -78,8 +78,8 @@ export default async function AdminScrapers() {
                   <td className="py-2 capitalize text-ink">{r.source}</td>
                   <td className="py-2 text-ink-muted">{new Date(r.startedAt).toLocaleString()}</td>
                   <td className="py-2 text-right text-ink">{r.fetched}</td>
-                  <td className="py-2 text-right text-emerald-300">{r.imported}</td>
-                  <td className="py-2 text-right text-amber-300">{r.skipped}</td>
+                  <td className="py-2 text-right text-emerald-700">{r.imported}</td>
+                  <td className="py-2 text-right text-amber-700">{r.skipped}</td>
                   <td className="py-2 text-right text-ink-muted">{r.durationMs ? `${(r.durationMs / 1000).toFixed(1)}s` : "—"}</td>
                   <td className="py-2 text-right">
                     <Badge variant={r.status === "ok" ? "success" : r.status === "error" ? "outline" : "warning"} title={r.error ?? ""}>{r.status}</Badge>

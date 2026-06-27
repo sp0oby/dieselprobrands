@@ -17,7 +17,7 @@ export function RetailSignupForm({ next }: { next: string }) {
 
   if (sent) {
     return (
-      <p className="mt-6 rounded-md border border-emerald-500/30 bg-emerald-500/10 p-4 text-center text-sm text-emerald-200">
+      <p className="mt-6 rounded-md border border-emerald-300 bg-emerald-50 p-4 text-center text-sm text-emerald-700">
         Check your email to confirm your account, then sign in.
       </p>
     );
@@ -56,7 +56,7 @@ export function RetailSignupForm({ next }: { next: string }) {
         <Label htmlFor="password">Password (min 8 chars)</Label>
         <Input id="password" type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
       </div>
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       <Button type="submit" size="lg" disabled={pending} className="w-full">
         {pending ? "Creating..." : "Create Account"}
       </Button>

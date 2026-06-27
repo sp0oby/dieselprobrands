@@ -17,7 +17,7 @@ export function ReviewForm({ productId }: { productId: string }) {
 
   if (done) {
     return (
-      <p className="rounded-md border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-200">
+      <p className="rounded-md border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-700">
         Thanks for your review! Verified purchases publish instantly; otherwise it'll appear after a quick moderation check.
       </p>
     );
@@ -63,7 +63,7 @@ export function ReviewForm({ productId }: { productId: string }) {
         <Label htmlFor="body">Review *</Label>
         <Textarea id="body" name="body" rows={5} required minLength={10} maxLength={2000} placeholder="What did and didn't work? Did it fit your application?" />
       </div>
-      {error && <p className="text-sm text-amber-300">{error}</p>}
+      {error && <p className="text-sm text-amber-700">{error}</p>}
       <Button type="submit" size="lg" disabled={pending || rating === 0}>
         {pending ? "Submitting…" : "Submit Review"}
       </Button>

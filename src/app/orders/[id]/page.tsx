@@ -180,7 +180,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               <div className="mt-2 text-sm">
                 <p className="font-mono text-ink">{order.trackingNumber}</p>
                 {order.trackingUrl && (
-                  <a href={order.trackingUrl} target="_blank" rel="noreferrer" className="mt-1 inline-block text-brand-400 hover:text-brand-300">
+                  <a href={order.trackingUrl} target="_blank" rel="noreferrer" className="mt-1 inline-block text-brand-400 hover:text-brand-600">
                     Track package →
                   </a>
                 )}

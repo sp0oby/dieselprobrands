@@ -45,7 +45,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
           </div>
 
           <p className="mt-6 text-center text-sm text-ink-muted">
-            Already have an account? <Link href={`/sign-in?next=${encodeURIComponent(next)}`} className="text-brand-400 hover:text-brand-300">Sign in</Link>
+            Already have an account? <Link href={`/sign-in?next=${encodeURIComponent(next)}`} className="text-brand-400 hover:text-brand-600">Sign in</Link>
           </p>
         </div>
       </div>
@@ -72,7 +72,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
           </>
         )}
         <p className="mt-6 text-center text-sm text-ink-muted">
-          <Link href="/sign-up" className="text-brand-400 hover:text-brand-300">← Back to account types</Link>
+          <Link href="/sign-up" className="text-brand-400 hover:text-brand-600">← Back to account types</Link>
         </p>
       </div>
     </div>

@@ -53,7 +53,7 @@ export default function ReturnsWarrantyPage() {
               <li>Clearance or final sale items</li>
               <li>Fluids, chemicals, or consumable products once opened</li>
             </ul>
-            <p className="mt-4 rounded-md border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-200">
+            <p className="mt-4 rounded-md border border-amber-300 bg-amber-100 p-4 text-sm text-amber-800">
               <strong>Restocking Fee:</strong> A 15% restocking fee applies to all returns except defective parts or shipping errors. Orders over $2,500 may be subject to a 20% restocking fee.
             </p>
           </Block>

@@ -53,12 +53,12 @@ function SignInInner() {
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-600">{error}</p>}
           <Button type="submit" size="lg" disabled={pending} className="w-full">{pending ? "Signing in..." : "Sign In"}</Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-ink-muted">
-          New here? <Link href={`/sign-up?next=${encodeURIComponent(next)}`} className="text-brand-400 hover:text-brand-300">Create an account</Link>
+          New here? <Link href={`/sign-up?next=${encodeURIComponent(next)}`} className="text-brand-400 hover:text-brand-600">Create an account</Link>
         </p>
       </div>
     </div>

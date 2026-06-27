@@ -137,7 +137,7 @@ export default async function AdminReturnDetail({ params }: { params: Promise<{ 
       )}
 
       {req.status === "refunded" && (
-        <div className="card-surface mt-6 p-6 border-emerald-500/30 bg-emerald-500/[0.04]">
+        <div className="card-surface mt-6 p-6 border-emerald-300 bg-emerald-500/[0.04]">
           <h2 className="text-base font-bold text-ink">Refunded</h2>
           <p className="mt-2 text-sm text-ink-muted">
             {formatPrice(req.refundAmountCents)} refunded {req.refundedAt ? new Date(req.refundedAt).toLocaleDateString() : ""}.

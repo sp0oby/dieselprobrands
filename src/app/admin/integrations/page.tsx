@@ -27,9 +27,9 @@ export default async function AdminIntegrations() {
       <p className="mt-2 text-ink-muted">External services connected to DieselPro Brands.</p>
 
       {!configured && (
-        <div className="card-surface mt-6 p-6 border-amber-500/30 bg-amber-500/[0.04]">
+        <div className="card-surface mt-6 p-6 border-amber-300 bg-amber-500/[0.04]">
           <div className="flex items-start gap-3">
-            <AlertCircle className="size-5 text-amber-400 shrink-0 mt-0.5" />
+            <AlertCircle className="size-5 text-amber-600 shrink-0 mt-0.5" />
             <div className="flex-1">
               <h2 className="text-lg font-bold text-ink">Zoho not yet configured</h2>
               <p className="mt-1 text-sm text-ink-muted">

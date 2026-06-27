@@ -30,7 +30,7 @@ export default async function CheckoutSuccessPage({ searchParams }: { searchPara
   return (
     <div className="container-x py-20">
       <div className="card-surface mx-auto max-w-xl p-10 text-center">
-        <CheckCircle2 className="mx-auto size-12 text-emerald-400" />
+        <CheckCircle2 className="mx-auto size-12 text-emerald-600" />
         <h1 className="mt-4 text-3xl font-bold text-ink">Order Confirmed</h1>
         <p className="mt-2 text-ink-muted">
           Thanks for shopping with Diesel Pro Brands. We'll email you a receipt and tracking info shortly.
@@ -42,7 +42,7 @@ export default async function CheckoutSuccessPage({ searchParams }: { searchPara
             <dt className="text-left text-ink-muted">Total</dt>
             <dd className="text-right text-ink font-semibold">{formatPrice(order.totalCents)}</dd>
             <dt className="text-left text-ink-muted">Status</dt>
-            <dd className="text-right text-emerald-400 capitalize">{order.status}</dd>
+            <dd className="text-right text-emerald-600 capitalize">{order.status}</dd>
           </dl>
         )}
         <div className="mt-8 flex justify-center gap-3">

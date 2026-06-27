@@ -12,15 +12,15 @@ export function PromoForm({ currentCode, error: serverError }: { currentCode: st
 
   if (currentCode && !serverError) {
     return (
-      <div className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm flex items-center justify-between">
-        <span className="inline-flex items-center gap-1.5 text-emerald-200">
+      <div className="rounded-md border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm flex items-center justify-between">
+        <span className="inline-flex items-center gap-1.5 text-emerald-700">
           <Tag className="size-3.5" /> <span className="font-mono">{currentCode}</span>
         </span>
         <button
           type="button"
           onClick={() => start(() => removePromoAction())}
           disabled={pending}
-          className="text-emerald-200/70 hover:text-emerald-200 disabled:opacity-50"
+          className="text-emerald-700/70 hover:text-emerald-700 disabled:opacity-50"
           aria-label="Remove promo"
         >
           <X className="size-4" />
@@ -54,7 +54,7 @@ export function PromoForm({ currentCode, error: serverError }: { currentCode: st
           Apply
         </Button>
       </div>
-      {(error || serverError) && <p className="text-xs text-amber-300">{error ?? serverError}</p>}
+      {(error || serverError) && <p className="text-xs text-amber-700">{error ?? serverError}</p>}
     </form>
   );
 }

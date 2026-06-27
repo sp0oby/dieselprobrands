@@ -20,7 +20,7 @@ export function BusinessSignupForm({ next }: { next: string }) {
 
   if (sent) {
     return (
-      <p className="mt-6 rounded-md border border-emerald-500/30 bg-emerald-500/10 p-4 text-center text-sm text-emerald-200">
+      <p className="mt-6 rounded-md border border-emerald-300 bg-emerald-50 p-4 text-center text-sm text-emerald-700">
         Application received! Check your email to confirm your account. Once confirmed, you can shop with retail
         pricing while our team reviews your business application (1–2 business days).
       </p>
@@ -100,7 +100,7 @@ export function BusinessSignupForm({ next }: { next: string }) {
         <Field label="Anything else we should know?"><Textarea name="notes" rows={3} /></Field>
       </fieldset>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       <Button type="submit" size="lg" disabled={pending} className="w-full">
         {pending ? "Submitting..." : "Submit Application"}
       </Button>

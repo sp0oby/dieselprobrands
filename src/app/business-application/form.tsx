@@ -51,7 +51,7 @@ export function BusinessApplicationForm({ defaultName = "" }: { defaultName?: st
         </Field>
       </div>
       <Field label="Anything else we should know?"><Textarea name="notes" rows={3} /></Field>
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       <Button type="submit" size="lg" disabled={pending} className="w-full">
         {pending ? "Submitting..." : "Submit Application"}
       </Button>

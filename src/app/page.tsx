@@ -59,11 +59,11 @@ export default async function HomePage() {
         </div>
 
         {/* trust strip — inline, borderless, sits at the bottom of the hero */}
-        <div className="relative border-t border-black/[0.04] bg-black/30 backdrop-blur-sm">
+        <div className="relative border-t border-black/[0.06] bg-bg-elev/80 backdrop-blur-sm">
           <div className="container-x grid grid-cols-2 gap-4 py-5 md:grid-cols-4">
             {TRUST.map((t) => (
               <div key={t.title} className="flex items-center gap-3">
-                <span className="grid size-9 place-items-center rounded-full bg-brand/15 text-brand-400">
+                <span className="grid size-9 place-items-center rounded-full bg-brand/10 text-brand-600">
                   <t.icon className="size-4" />
                 </span>
                 <div className="leading-tight">
@@ -172,7 +172,7 @@ function SectionHeader({ title, subtitle, cta, titlePrefix }: { title: string; s
         <p className="mt-2 text-sm text-ink-muted">{subtitle}</p>
       </div>
       {cta && (
-        <Link href={cta.href} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-400 hover:text-brand-300">
+        <Link href={cta.href} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-400 hover:text-brand-600">
           {cta.label} <ArrowRight className="size-4" />
         </Link>
       )}

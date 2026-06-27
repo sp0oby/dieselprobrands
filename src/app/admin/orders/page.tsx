@@ -40,7 +40,7 @@ export default async function AdminOrders() {
                       DPB-{String(o.number).padStart(6, "0")}
                     </Link>
                     <p className="text-xs text-ink-muted">{o.email} · {new Date(o.createdAt).toLocaleString()}</p>
-                    {o.refundedCents > 0 && <p className="text-xs text-amber-300 mt-1">Refunded {formatPrice(o.refundedCents)}</p>}
+                    {o.refundedCents > 0 && <p className="text-xs text-amber-700 mt-1">Refunded {formatPrice(o.refundedCents)}</p>}
                   </div>
                   <p className="text-sm font-semibold text-ink">{formatPrice(o.totalCents)}</p>
                   <Badge variant={o.status === "delivered" ? "success" : o.status === "refunded" ? "outline" : o.status === "paid" ? "info" : "warning"}>{o.status}</Badge>

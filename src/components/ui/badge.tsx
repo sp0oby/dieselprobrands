@@ -9,9 +9,9 @@ const badgeVariants = cva(
       variant: {
         default: "bg-black/5 text-ink",
         brand: "bg-brand text-white",
-        success: "bg-emerald-500/20 text-emerald-300",
-        warning: "bg-amber-500/20 text-amber-200",
-        info: "bg-sky-500/20 text-sky-200",
+        success: "bg-emerald-100 text-emerald-700",
+        warning: "bg-amber-100 text-amber-800",
+        info: "bg-sky-500/20 text-sky-700",
         outline: "border border-black/10 text-ink",
       },
     },
