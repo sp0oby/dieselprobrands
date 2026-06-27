@@ -37,6 +37,12 @@ export const CATEGORIES: Category[] = [
   { slug: "solenoid-valves", name: "Solenoid Valves", icon: "🎛️", count: 189 },
   { slug: "gaskets-seals", name: "Gaskets & Seals", icon: "🔩", count: 456 },
   { slug: "belts-hoses", name: "Belts & Hoses", icon: "➰", count: 298 },
+  { slug: "filters", name: "Filters", icon: "🌬️", count: 0 },
+  { slug: "cooling", name: "Cooling Systems", icon: "❄️", count: 0 },
+  { slug: "electrical", name: "Electrical", icon: "🔌", count: 0 },
+  { slug: "hydraulics", name: "Hydraulics", icon: "💧", count: 0 },
+  { slug: "ac-systems", name: "A/C & Climate", icon: "🌬️", count: 0 },
+  { slug: "drivetrain", name: "Drivetrain", icon: "⚙️", count: 0 },
 ];
 
 export type Brand = {
