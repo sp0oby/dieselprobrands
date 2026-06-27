@@ -3,8 +3,8 @@ import { ArrowRight, Award, Clock, ShieldCheck, Truck, Users, Flame, Zap, Sparkl
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/site/product-card";
 import { CategoryIcon } from "@/components/site/category-icon";
-import { listHotDeals } from "@/lib/queries";
-import { CATEGORIES, BRANDS } from "@/lib/site";
+import { listHotDeals, listCategoriesWithCounts } from "@/lib/queries";
+import { BRANDS } from "@/lib/site";
 import { IMG } from "@/lib/products";
 import { BrandLogo } from "@/components/site/brand-logo";
 
@@ -16,7 +16,10 @@ const TRUST = [
 ];
 
 export default async function HomePage() {
-  const hot = await listHotDeals(8);
+  const [hot, categories] = await Promise.all([
+    listHotDeals(8),
+    listCategoriesWithCounts(),
+  ]);
   const featuredBrands = BRANDS.filter((b) => b.featured).slice(0, 12);
 
   return (
@@ -77,15 +80,15 @@ export default async function HomePage() {
       <section className="container-x py-14 lg:py-16">
         <SectionHeader title="Shop by Category" subtitle="Find exactly what you need" cta={{ label: "View All", href: "/shop" }} />
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <Link
               key={c.slug}
               href={`/shop?category=${c.slug}`}
               className="group flex flex-col items-center gap-2 rounded-xl border border-black/[0.06] bg-bg-card p-4 text-center transition-all hover:border-brand/40 hover:-translate-y-0.5"
             >
               <CategoryIcon slug={c.slug} />
-              <h3 className="mt-1 text-sm font-semibold text-ink group-hover:text-brand-400">{c.name}</h3>
-              <p className="text-xs text-ink-muted"><span className="text-brand-400">{c.count}</span> items</p>
+              <h3 className="mt-1 text-sm font-semibold text-ink group-hover:text-brand-600">{c.name}</h3>
+              <p className="text-xs text-ink-muted"><span className="text-brand-600 font-semibold">{c.count.toLocaleString()}</span> items</p>
             </Link>
           ))}
         </div>

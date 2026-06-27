@@ -185,6 +185,22 @@ export async function getProductDetail(slug: string) {
 
 // OEM cross-reference search: find every product whose replacement_part_numbers
 // covers the given competitor/OEM part number.
+// Pull real per-category product counts from the DB so homepage + shop
+// always show accurate numbers (the static CATEGORIES list is just for
+// slug/name/icon ordering — counts there are seed placeholders).
+export async function listCategoriesWithCounts(): Promise<Array<typeof CATEGORIES[number] & { count: number }>> {
+  if (!isDbConfigured()) return [...CATEGORIES];
+  try {
+    const rows = await db
+      .select({ slug: categories.slug, count: sql<number>`coalesce(${categories.productCount}, 0)` })
+      .from(categories);
+    const countBySlug = new Map(rows.map((r) => [r.slug, Number(r.count)]));
+    return CATEGORIES.map((c) => ({ ...c, count: countBySlug.get(c.slug) ?? 0 }));
+  } catch {
+    return [...CATEGORIES];
+  }
+}
+
 export async function searchByOemNumber(input: string) {
   const canon = canonicalizePartNumber(input);
   if (canon.length < 4) return [] as ProductCardProduct[];
