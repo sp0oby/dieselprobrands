@@ -41,9 +41,17 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
   const items = await searchProducts({ category, priceRange, inStockOnly, sort, q });
 
+  // Sidebar filters represent "browse this slice of the catalog" rather than
+  // "refine my search", so applying a category/price/availability filter clears
+  // any active search term. Sort changes preserve q (purely cosmetic).
   const link = (overrides: Record<string, string | undefined>) => {
     const next = new URLSearchParams();
-    const merge = { category, price: priceRange, stock: inStockOnly ? "1" : undefined, sort, q, ...overrides };
+    const browsing = "category" in overrides || "price" in overrides || "stock" in overrides;
+    const merge = {
+      category, price: priceRange, stock: inStockOnly ? "1" : undefined, sort,
+      q: browsing ? undefined : q,
+      ...overrides,
+    };
     Object.entries(merge).forEach(([k, v]) => { if (v && v !== "all") next.set(k, v); });
     const s = next.toString();
     return s ? `/shop?${s}` : "/shop";
@@ -54,7 +62,18 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-4xl font-extrabold text-ink">Shop Diesel Parts</h1>
-          <p className="mt-2 text-ink-muted"><span className="text-ink font-semibold">{items.length}</span> products available</p>
+          <p className="mt-2 text-ink-muted">
+            <span className="text-ink font-semibold">{items.length}</span> products
+            {q ? <> matching <span className="text-ink font-semibold">"{q}"</span></> : " available"}
+          </p>
+          {q && (
+            <Link
+              href={link({ q: undefined })}
+              className="mt-2 inline-flex items-center gap-1 text-xs text-brand-600 hover:text-brand-700"
+            >
+              ✕ Clear search
+            </Link>
+          )}
         </div>
         <SortBar category={category} priceRange={priceRange} inStockOnly={inStockOnly} sort={sort} />
       </div>
