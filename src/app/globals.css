@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html, body {
+    background-color: #f7f7f8;
+    color: #0a0b0d;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background-color: rgba(211, 47, 47, 0.18);
+    color: #0a0b0d;
+  }
+  *:focus-visible {
+    outline: 2px solid #d32f2f;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-8; }
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-brand/20 bg-brand/[0.08] px-3 py-1 text-xs font-medium text-brand-600;
+  }
+  .hairline { @apply border-t border-black/[0.08]; }
+  .card-surface {
+    @apply rounded-xl border border-black/[0.06] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_2px_6px_rgba(0,0,0,0.03)];
+  }
+  .heading-gradient {
+    background: linear-gradient(135deg, #d32f2f 0%, #ef4444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* scrollbar (light) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #f1f3f5; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
