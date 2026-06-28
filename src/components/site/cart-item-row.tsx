@@ -39,7 +39,7 @@ export function CartItemRow({ line }: { line: CartItemRowLine }) {
       </div>
       <div className="inline-flex h-9 items-center rounded-md border border-black/10 bg-bg-panel">
         <button
-          onClick={() => start(() => updateCartAction(line.productId, Math.max(0, line.quantity - 1)))}
+          onClick={() => start(async () => { await updateCartAction(line.productId, Math.max(0, line.quantity - 1)); })}
           disabled={pending}
           className="grid size-9 place-items-center text-ink-muted hover:text-ink disabled:opacity-50"
           aria-label="Decrease"
@@ -48,7 +48,7 @@ export function CartItemRow({ line }: { line: CartItemRowLine }) {
         </button>
         <span className="w-8 text-center text-sm font-semibold text-ink">{line.quantity}</span>
         <button
-          onClick={() => start(() => updateCartAction(line.productId, line.quantity + 1))}
+          onClick={() => start(async () => { await updateCartAction(line.productId, line.quantity + 1); })}
           disabled={pending}
           className="grid size-9 place-items-center text-ink-muted hover:text-ink disabled:opacity-50"
           aria-label="Increase"
@@ -63,7 +63,7 @@ export function CartItemRow({ line }: { line: CartItemRowLine }) {
           {formatPrice(line.unitPriceCents)} ea
         </p>
         <button
-          onClick={() => start(() => removeFromCartAction(line.productId))}
+          onClick={() => start(async () => { await removeFromCartAction(line.productId); })}
           disabled={pending}
           className="mt-2 inline-flex items-center gap-1 text-xs text-ink-dim hover:text-brand-400 disabled:opacity-50"
         >

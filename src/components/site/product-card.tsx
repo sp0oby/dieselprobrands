@@ -111,9 +111,11 @@ export function ProductCard({ p, initialWished = false }: { p: ProductCardProduc
             disabled={pending}
             onClick={() =>
               start(async () => {
-                await addToCartAction(p.id, 1);
-                setAdded(true);
-                setTimeout(() => setAdded(false), 1200);
+                const res = await addToCartAction(p.id, 1);
+                if (res.ok) {
+                  setAdded(true);
+                  setTimeout(() => setAdded(false), 1200);
+                }
               })
             }
             aria-label="Add to cart"
