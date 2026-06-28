@@ -6,6 +6,9 @@
   :root {
     color-scheme: light;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   html, body {
     background-color: #f7f7f8;
     color: #0a0b0d;
@@ -36,6 +39,21 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  /* Thin red accent under section headers — modern editorial touch. */
+  .section-accent::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 3px;
+    margin-bottom: 14px;
+    background: linear-gradient(90deg, #d32f2f 0%, #ef4444 100%);
+    border-radius: 2px;
+  }
+  /* Subtle gradient divider between major sections. */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.08) 50%, transparent 100%);
   }
 }
 

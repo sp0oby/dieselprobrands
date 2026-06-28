@@ -11,11 +11,12 @@ export function Logo({
   className?: string;
   variant?: "full" | "mark";
 }) {
-  // logo-wide.webp is already cropped 717x200 (~3.585:1), no whitespace.
-  const heights = { sm: 28, md: 40, lg: 52 } as const;
+  // logo-wide-v2.webp is the new DP PRO.com / DIESELPROBRANDS.COM mark,
+  // trimmed to 800x271 (~2.95:1, no whitespace).
+  const heights = { sm: 32, md: 44, lg: 56 } as const;
   const h = heights[size];
-  const w = variant === "full" ? Math.round(h * 3.585) : h;
-  const src = variant === "full" ? "/logo-wide.webp" : "/logomark.webp";
+  const w = variant === "full" ? Math.round(h * 2.95) : h;
+  const src = variant === "full" ? "/logo-wide-v2.webp" : "/logomark.webp";
   return (
     <Link href="/" className={cn("inline-flex items-center", className)}>
       <Image

@@ -1,19 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, Award, Clock, ShieldCheck, Truck, Users, Flame, Zap, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Clock, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/site/product-card";
 import { CategoryIcon } from "@/components/site/category-icon";
 import { listHotDeals, listCategoriesWithCounts } from "@/lib/queries";
 import { BRANDS } from "@/lib/site";
-import { IMG } from "@/lib/products";
 import { BrandLogo } from "@/components/site/brand-logo";
-
-const TRUST = [
-  { title: "Longest Warranty", subtitle: "Industry Leading", icon: ShieldCheck },
-  { title: "Same-Day Ship", subtitle: "Time is Money", icon: Truck },
-  { title: "Expert Team", subtitle: "Parts Rebuilders", icon: Award },
-  { title: "4 Industries", subtitle: "We Have You Covered", icon: Users },
-];
 
 export default async function HomePage() {
   const [hot, categories] = await Promise.all([
@@ -24,55 +17,29 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* HERO */}
-      <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-hero-glow" />
-        <div
-          className="absolute inset-0 -z-20 opacity-15"
-          style={{
-            backgroundImage: `url('${IMG.heroConstruction}')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            filter: "blur(2px) brightness(0.9)",
-          }}
-        />
-        <div className="container-x relative pt-16 pb-10 lg:pt-20 lg:pb-12">
-          <span className="pill">
-            <Sparkles className="size-3.5" /> Premium Diesel Parts &amp; Components
-          </span>
-          <h1 className="mt-6 max-w-3xl text-5xl font-extrabold leading-[1.02] tracking-tight text-ink sm:text-6xl lg:text-[64px]">
-            Power Your<br />
-            <span className="heading-gradient">Diesel Engine</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-base text-ink-muted">
-            Turbo, fuel pump &amp; fuel injector experts. Serving agricultural, highway, construction, and marine
-            industries with the longest warranty in the business.
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Button asChild size="lg">
-              <Link href="/shop">Shop Now <ArrowRight /></Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/about">Learn More</Link>
-            </Button>
-          </div>
+      {/* HERO — the banner image carries the headline, product photos, and
+          trust strip (Longest Warranty / Premium Quality / Expert Support /
+          Fast Turnaround) so the page chrome around it stays minimal. */}
+      <section className="relative isolate">
+        <div className="relative aspect-[3/1] w-full overflow-hidden bg-black">
+          <Image
+            src="/hero.webp"
+            alt="DieselPro Brands — Turbo, Fuel Pump &amp; Fuel Injector Experts. Longest warranty in the business."
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+            priority
+          />
         </div>
-
-        {/* trust strip — inline, borderless, sits at the bottom of the hero */}
-        <div className="relative border-t border-black/[0.06] bg-bg-elev/80 backdrop-blur-sm">
-          <div className="container-x grid grid-cols-2 gap-4 py-5 md:grid-cols-4">
-            {TRUST.map((t) => (
-              <div key={t.title} className="flex items-center gap-3">
-                <span className="grid size-9 place-items-center rounded-full bg-brand/10 text-brand-600">
-                  <t.icon className="size-4" />
-                </span>
-                <div className="leading-tight">
-                  <p className="text-sm font-semibold text-ink">{t.title}</p>
-                  <p className="text-[11px] text-ink-muted">{t.subtitle}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* Quick CTAs below the banner — sits flush so the visual flow stays
+            unbroken. Buttons are the only chrome we add over the baked-in art. */}
+        <div className="container-x -mt-6 flex flex-wrap justify-center gap-3 sm:-mt-8 lg:-mt-10">
+          <Button asChild size="lg">
+            <Link href="/shop">Shop Parts <ArrowRight /></Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="bg-bg/90 backdrop-blur">
+            <Link href="/contact">Talk to an Expert</Link>
+          </Button>
         </div>
       </section>
 
@@ -141,20 +108,39 @@ export default async function HomePage() {
 
       {/* CTA */}
       <section className="container-x py-16 lg:py-24">
-        <div className="relative overflow-hidden rounded-2xl bg-brand p-10 md:p-16 text-center">
+        <div className="relative overflow-hidden rounded-3xl p-10 md:p-16 text-center" style={{
+          background: "radial-gradient(120% 100% at 50% 0%, #ef4444 0%, #d32f2f 45%, #991f1f 100%)",
+        }}>
+          {/* Subtle grid pattern overlay */}
           <div
-            className="absolute inset-0 opacity-10"
-            style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.6), transparent 60%)" }}
+            className="absolute inset-0 opacity-[0.06]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+          {/* Soft top-corner light */}
+          <div
+            className="absolute -top-32 left-1/2 -z-10 h-64 w-[140%] -translate-x-1/2 opacity-30 blur-3xl"
+            style={{ background: "radial-gradient(closest-side, rgba(255,255,255,0.9), transparent)" }}
           />
           <div className="relative">
-            <Clock className="mx-auto size-10 text-white" />
-            <h2 className="mt-5 text-3xl font-bold text-white sm:text-4xl">Need Expert Advice?</h2>
-            <p className="mx-auto mt-3 max-w-xl text-white/90">
+            <div className="mx-auto inline-flex size-14 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-white/25 backdrop-blur-sm">
+              <Clock className="size-6 text-white" />
+            </div>
+            <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-[40px]">Need Expert Advice?</h2>
+            <p className="mx-auto mt-3 max-w-xl text-white/85">
               Our team of diesel specialists is ready to help you find the perfect parts for your engine.
             </p>
-            <Button asChild size="lg" className="mt-6 bg-white text-brand hover:bg-white/90">
-              <Link href="/contact">Contact Us Today <ArrowRight /></Link>
-            </Button>
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              <Button asChild size="lg" className="bg-white text-brand shadow-lg hover:bg-white/95">
+                <Link href="/contact">Contact Us Today <ArrowRight /></Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-white/30 bg-transparent text-white hover:bg-white/10">
+                <Link href="/help">Browse FAQ</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -165,15 +151,15 @@ export default async function HomePage() {
 function SectionHeader({ title, subtitle, cta, titlePrefix }: { title: string; subtitle: string; cta?: { label: string; href: string }; titlePrefix?: React.ReactNode }) {
   return (
     <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-end">
-      <div>
-        <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+      <div className="section-accent">
+        <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl lg:text-[34px]">
           {titlePrefix}{title}
         </h2>
         <p className="mt-2 text-sm text-ink-muted">{subtitle}</p>
       </div>
       {cta && (
-        <Link href={cta.href} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-400 hover:text-brand-600">
-          {cta.label} <ArrowRight className="size-4" />
+        <Link href={cta.href} className="group inline-flex items-center gap-1 text-sm font-semibold text-brand-400 transition-colors hover:text-brand-600">
+          {cta.label} <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
       )}
     </div>
