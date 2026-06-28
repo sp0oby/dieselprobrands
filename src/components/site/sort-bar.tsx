@@ -10,9 +10,11 @@ const SORTS = [
 ];
 
 export function SortBar({
-  category, priceRange, inStockOnly, sort,
+  category, brand, engine, priceRange, inStockOnly, sort,
 }: {
   category: string;
+  brand?: string;
+  engine?: string;
   priceRange: string;
   inStockOnly: boolean;
   sort: string;
@@ -20,6 +22,8 @@ export function SortBar({
   return (
     <form method="GET" className="flex gap-2">
       <input type="hidden" name="category" value={category} />
+      {brand && <input type="hidden" name="brand" value={brand} />}
+      {engine && <input type="hidden" name="engine" value={engine} />}
       <input type="hidden" name="price" value={priceRange} />
       {inStockOnly && <input type="hidden" name="stock" value="1" />}
       <button

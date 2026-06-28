@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { db, products, brands, categories, oemPartNumbers, isDbConfigured } from "@/db";
 import type { ProductCardProduct } from "@/components/site/product-card";
 import { CATALOG } from "./catalog";
@@ -98,6 +98,7 @@ export type Sort = "featured" | "price-asc" | "price-desc" | "name-asc" | "best-
 export async function searchProducts(params: {
   category?: string;
   brand?: string;
+  engine?: string;
   q?: string;
   priceRange?: "under-200" | "200-500" | "500-1000" | "1000-plus" | "all";
   inStockOnly?: boolean;
@@ -106,6 +107,9 @@ export async function searchProducts(params: {
   const conditions = [];
   if (params.category && params.category !== "all") conditions.push(eq(products.categorySlug, params.category));
   if (params.brand) conditions.push(eq(products.brandSlug, params.brand));
+  // Engine model lives in the `specs` JSONB. Match its serialized text so we
+  // catch both the curated `Engines` key and any engine mentions in description-like fields.
+  if (params.engine) conditions.push(sql`${products.specs}::text ILIKE ${"%" + params.engine + "%"}`);
   if (params.q) conditions.push(or(ilike(products.name, `%${params.q}%`), ilike(products.sku, `%${params.q}%`))!);
   if (params.inStockOnly) conditions.push(eq(products.inStock, true));
   if (params.priceRange && params.priceRange !== "all") {
@@ -123,6 +127,10 @@ export async function searchProducts(params: {
     let cards = seedAsCards();
     if (params.category && params.category !== "all") cards = cards.filter((c) => SEED_PRODUCTS.find((p) => p.slug === c.slug)?.category === params.category);
     if (params.brand) cards = cards.filter((c) => SEED_PRODUCTS.find((p) => p.slug === c.slug)?.brand === params.brand);
+    if (params.engine) {
+      const eng = params.engine.toLowerCase();
+      cards = cards.filter((c) => JSON.stringify(SEED_PRODUCTS.find((p) => p.slug === c.slug)?.specs ?? {}).toLowerCase().includes(eng));
+    }
     if (params.q) cards = cards.filter((c) => c.name.toLowerCase().includes(params.q!.toLowerCase()) || c.sku.toLowerCase().includes(params.q!.toLowerCase()));
     return cards;
   }
@@ -231,6 +239,25 @@ export async function searchByOemNumber(input: string) {
     badge: p.badge,
     imageUrl: p.imageUrl ?? null,
   }));
+}
+
+export async function getProductsBySlugs(slugs: string[]) {
+  if (slugs.length === 0) return [];
+  if (!isDbConfigured()) {
+    return slugs
+      .map((s) => SEED_PRODUCTS.find((p) => p.slug === s))
+      .filter((p): p is NonNullable<typeof p> => Boolean(p));
+  }
+  try {
+    const rows = await db.select().from(products).where(inArray(products.slug, slugs));
+    // Preserve caller's order
+    const bySlug = new Map(rows.map((r) => [r.slug, r]));
+    return slugs.map((s) => bySlug.get(s)).filter((r): r is NonNullable<typeof r> => Boolean(r));
+  } catch {
+    return slugs
+      .map((s) => SEED_PRODUCTS.find((p) => p.slug === s))
+      .filter((p): p is NonNullable<typeof p> => Boolean(p));
+  }
 }
 
 export async function listRelatedProducts(slug: string, categorySlug: string, limit = 4) {

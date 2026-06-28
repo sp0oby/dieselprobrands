@@ -4,14 +4,49 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductBadge } from "@/components/ui/badge";
 import { StarRating } from "@/components/ui/star-rating";
-import { CATALOG } from "@/lib/catalog";
+import { getProductsBySlugs } from "@/lib/queries";
 import { BRANDS, CATEGORIES } from "@/lib/site";
 import { formatPrice } from "@/lib/utils";
+
+type CompareProduct = {
+  slug: string;
+  sku: string;
+  name: string;
+  brand: string;
+  category: string;
+  priceCents: number;
+  rating: number;
+  reviewCount: number;
+  inStock: boolean;
+  stockQty: number;
+  badge: string | null;
+  imageUrl: string | null;
+  specs: Record<string, string>;
+};
 
 export default async function ComparePage({ searchParams }: { searchParams: Promise<{ slugs?: string }> }) {
   const { slugs = "" } = await searchParams;
   const wanted = slugs.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 4);
-  const products = wanted.map((slug) => CATALOG.find((p) => p.slug === slug)).filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const rows = await getProductsBySlugs(wanted);
+  const products: CompareProduct[] = rows.map((r) => {
+    // DB rows and seed rows have slightly different shapes — normalize.
+    const isDbRow = "brandSlug" in r;
+    return {
+      slug: r.slug,
+      sku: r.sku,
+      name: r.name,
+      brand: isDbRow ? (r as { brandSlug: string }).brandSlug : (r as { brand: string }).brand,
+      category: isDbRow ? (r as { categorySlug: string }).categorySlug : (r as { category: string }).category,
+      priceCents: r.priceCents,
+      rating: Number(r.rating),
+      reviewCount: r.reviewCount,
+      inStock: r.inStock,
+      stockQty: r.stockQty,
+      badge: r.badge ?? null,
+      imageUrl: r.imageUrl ?? null,
+      specs: (r.specs ?? {}) as Record<string, string>,
+    };
+  });
 
   if (products.length === 0) {
     return (

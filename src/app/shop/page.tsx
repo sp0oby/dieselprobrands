@@ -3,8 +3,11 @@ import { redirect } from "next/navigation";
 import { ProductCard } from "@/components/site/product-card";
 import { SortBar } from "@/components/site/sort-bar";
 import { searchProducts, searchByOemNumber, type Sort } from "@/lib/queries";
-import { CATEGORIES } from "@/lib/site";
+import { BRANDS, CATEGORIES } from "@/lib/site";
 import { cn } from "@/lib/utils";
+
+const TOP_BRANDS = BRANDS.filter((b) => b.featured).slice(0, 8);
+const OTHER_BRANDS = BRANDS.filter((b) => !TOP_BRANDS.includes(b));
 
 const PRICE_RANGES = [
   { value: "all", label: "All Prices" },
@@ -25,6 +28,8 @@ const SORTS: { value: Sort; label: string }[] = [
 export default async function ShopPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
   const category = sp.category ?? "all";
+  const brand = sp.brand;
+  const engine = sp.engine?.trim() || undefined;
   const priceRange = (sp.price as "all" | "under-200" | "200-500" | "500-1000" | "1000-plus" | undefined) ?? "all";
   const inStockOnly = sp.stock === "1";
   const sort = (sp.sort as Sort) ?? "featured";
@@ -39,16 +44,16 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     }
   }
 
-  const items = await searchProducts({ category, priceRange, inStockOnly, sort, q });
+  const items = await searchProducts({ category, brand, engine, priceRange, inStockOnly, sort, q });
 
   // Sidebar filters represent "browse this slice of the catalog" rather than
   // "refine my search", so applying a category/price/availability filter clears
   // any active search term. Sort changes preserve q (purely cosmetic).
   const link = (overrides: Record<string, string | undefined>) => {
     const next = new URLSearchParams();
-    const browsing = "category" in overrides || "price" in overrides || "stock" in overrides;
+    const browsing = "category" in overrides || "brand" in overrides || "engine" in overrides || "price" in overrides || "stock" in overrides;
     const merge = {
-      category, price: priceRange, stock: inStockOnly ? "1" : undefined, sort,
+      category, brand, engine, price: priceRange, stock: inStockOnly ? "1" : undefined, sort,
       q: browsing ? undefined : q,
       ...overrides,
     };
@@ -75,7 +80,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
             </Link>
           )}
         </div>
-        <SortBar category={category} priceRange={priceRange} inStockOnly={inStockOnly} sort={sort} />
+        <SortBar category={category} brand={brand} engine={engine} priceRange={priceRange} inStockOnly={inStockOnly} sort={sort} />
       </div>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[260px,1fr]">
@@ -87,6 +92,51 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
                 {c.name}
               </FilterLink>
             ))}
+          </FilterGroup>
+
+          <FilterGroup title="Brand">
+            <FilterLink href={link({ brand: undefined })} active={!brand}>All Brands</FilterLink>
+            {TOP_BRANDS.map((b) => (
+              <FilterLink key={b.slug} href={link({ brand: b.slug })} active={brand === b.slug}>
+                {b.displayName}
+              </FilterLink>
+            ))}
+            <details className="mt-1 group">
+              <summary className="cursor-pointer rounded-md px-3 py-1.5 text-xs uppercase tracking-wider text-ink-dim hover:text-ink list-none">
+                More brands ▾
+              </summary>
+              <div className="mt-1 space-y-1">
+                {OTHER_BRANDS.map((b) => (
+                  <FilterLink key={b.slug} href={link({ brand: b.slug })} active={brand === b.slug}>
+                    {b.displayName}
+                  </FilterLink>
+                ))}
+              </div>
+            </details>
+          </FilterGroup>
+
+          <FilterGroup title="Engine Model">
+            <form method="GET" className="space-y-2">
+              <input type="hidden" name="category" value={category} />
+              {brand && <input type="hidden" name="brand" value={brand} />}
+              <input type="hidden" name="price" value={priceRange} />
+              {inStockOnly && <input type="hidden" name="stock" value="1" />}
+              <input
+                type="text"
+                name="engine"
+                defaultValue={engine ?? ""}
+                placeholder="e.g. C7, DL06, ISX15"
+                className="w-full rounded-md border border-black/10 bg-bg-panel px-3 py-2 text-sm text-ink placeholder:text-ink-dim"
+              />
+              <button type="submit" className="w-full rounded-md bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700">
+                Apply
+              </button>
+              {engine && (
+                <Link href={link({ engine: undefined })} className="block text-center text-xs text-ink-muted hover:text-ink">
+                  ✕ Clear engine
+                </Link>
+              )}
+            </form>
           </FilterGroup>
 
           <FilterGroup title="Price Range">

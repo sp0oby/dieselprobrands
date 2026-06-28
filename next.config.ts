@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const config: NextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      { source: "/returns", destination: "/returns-warranty", permanent: true },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },

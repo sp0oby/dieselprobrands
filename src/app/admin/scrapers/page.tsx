@@ -1,5 +1,11 @@
 import { desc, eq, sql } from "drizzle-orm";
 import { Play, ExternalLink } from "lucide-react";
+
+// fabheavy walks 200 paginated Shopify pages with rate-limit sleeps, which can
+// exceed the default action timeout. Allow up to 5 min on the page route so
+// the synchronous "Run now" can finish; the cron route already uses the same.
+export const runtime = "nodejs";
+export const maxDuration = 300;
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { db, scrapeRuns, products } from "@/db";
