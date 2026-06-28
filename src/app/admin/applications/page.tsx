@@ -5,9 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { db, businessApplications, profiles, tierValues } from "@/db";
 import { approveApplication, rejectApplication } from "@/app/actions/business-application";
+import { assertAdmin } from "@/lib/admin";
 
 async function approveAction(formData: FormData) {
   "use server";
+  await assertAdmin();
   await approveApplication(
     String(formData.get("id")),
     String(formData.get("tier")) as (typeof tierValues)[number],
@@ -16,6 +18,7 @@ async function approveAction(formData: FormData) {
 }
 async function rejectAction(formData: FormData) {
   "use server";
+  await assertAdmin();
   await rejectApplication(String(formData.get("id")), String(formData.get("note") || "") || undefined);
 }
 

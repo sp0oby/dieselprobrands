@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input";
 import { formatPrice } from "@/lib/utils";
 import { issueRefund } from "@/app/actions/refund";
 import { setTrackingNumber } from "@/app/actions/tracking";
+import { assertAdmin } from "@/lib/admin";
 
 async function setStatus(formData: FormData) {
   "use server";
+  await assertAdmin();
   const id = String(formData.get("id"));
   const status = String(formData.get("status")) as "pending" | "paid" | "shipped" | "delivered" | "cancelled" | "refunded";
   await db.update(orders).set({ status, updatedAt: new Date() }).where(eq(orders.id, id));
@@ -17,6 +19,8 @@ async function setStatus(formData: FormData) {
 
 async function refundAction(formData: FormData) {
   "use server";
+  // issueRefund itself calls assertAdmin, but wrap defensively in case that ever changes.
+  await assertAdmin();
   await issueRefund(formData);
 }
 

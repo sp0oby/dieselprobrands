@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { runScraper } from "@/lib/scraping/pipeline";
+import { requireCronAuth } from "@/lib/cron-auth";
 
 // Periodic catalog refresh. Default: weekly via vercel.ts cron.
 // fabheavy is direct (Shopify /products.json — no Apify needed).
@@ -10,11 +11,8 @@ export const runtime = "nodejs";
 export const maxDuration = 300;
 
 export async function GET(req: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = req.headers.get("authorization");
-    if (auth !== `Bearer ${secret}`) return new NextResponse("forbidden", { status: 403 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   const results = [];
   for (const source of ["fabheavy", "fridayparts"]) {

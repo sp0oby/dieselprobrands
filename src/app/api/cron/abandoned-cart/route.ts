@@ -3,6 +3,7 @@ import { and, eq, gt, lt, sql, isNull, isNotNull } from "drizzle-orm";
 import { db, carts, cartItems, products, profiles, cartAbandonmentNotifications } from "@/db";
 import { sendEmail, abandonedCartEmail } from "@/lib/email";
 import { logSync } from "@/lib/zoho/client";
+import { requireCronAuth } from "@/lib/cron-auth";
 
 // Stages: 4 hours, 24 hours, 7 days after last cart activity.
 const STAGES = [
@@ -14,11 +15,8 @@ const STAGES = [
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = req.headers.get("authorization");
-    if (auth !== `Bearer ${secret}`) return new NextResponse("forbidden", { status: 403 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   const started = Date.now();
   const now = new Date();

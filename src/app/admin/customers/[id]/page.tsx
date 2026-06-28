@@ -10,9 +10,11 @@ import { overrideTier } from "@/app/actions/business-application";
 import { setCustomerOverride, removeCustomerOverride } from "@/app/actions/promo";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { assertAdmin } from "@/lib/admin";
 
 async function setTierAction(formData: FormData) {
   "use server";
+  await assertAdmin();
   const id = String(formData.get("id"));
   const tier = String(formData.get("tier")) as (typeof tierValues)[number];
   await overrideTier(id, tier);

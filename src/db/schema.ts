@@ -229,6 +229,29 @@ export const productReviews = pgTable("product_reviews", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+// ---- webhook idempotency ---------------------------------------------------
+
+// Stripe (and other providers) retry webhooks on transient failures. Recording
+// the event id with a unique constraint lets the handler reject duplicates
+// before doing any side-effects (promo redemption, Zoho push, email).
+export const processedWebhookEvents = pgTable("processed_webhook_events", {
+  id: text("id").primaryKey(), // provider's event id, e.g. "evt_..."
+  provider: text("provider").notNull(), // "stripe" | future providers
+  eventType: text("event_type").notNull(),
+  receivedAt: timestamp("received_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// One row per user-per-review; the unique primary key prevents vote spam.
+export const reviewVotes = pgTable(
+  "review_votes",
+  {
+    reviewId: uuid("review_id").notNull().references(() => productReviews.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => profiles.id, { onDelete: "cascade" }),
+    votedAt: timestamp("voted_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({ pk: primaryKey({ columns: [t.reviewId, t.userId] }) }),
+);
+
 // ---- abandoned cart tracking -----------------------------------------------
 
 export const cartAbandonmentNotifications = pgTable(

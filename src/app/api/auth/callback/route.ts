@@ -3,10 +3,21 @@ import { createClient } from "@/lib/supabase/server";
 import { db, profiles } from "@/db";
 import { pushContact } from "@/lib/zoho/customer-sync";
 
+// Only accept relative, same-origin paths to avoid open-redirect abuse via the
+// `next` query param (e.g. `?next=//evil.com` or `?next=https://evil.com`).
+function sanitizeNext(raw: string | null): string {
+  if (!raw) return "/account";
+  // Must start with a single "/" and not be a protocol-relative URL ("//host").
+  if (!raw.startsWith("/") || raw.startsWith("//")) return "/account";
+  // Reject backslash tricks some browsers fold into "/".
+  if (raw.includes("\\")) return "/account";
+  return raw;
+}
+
 export async function GET(req: Request) {
   const { searchParams, origin } = new URL(req.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/account";
+  const next = sanitizeNext(searchParams.get("next"));
 
   if (code) {
     const supabase = await createClient();

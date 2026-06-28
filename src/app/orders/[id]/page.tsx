@@ -5,23 +5,32 @@ import { ArrowLeft, Check, FileDown, Package, Truck, RotateCcw } from "lucide-re
 import { eq } from "drizzle-orm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/server";
-import { db, orders, orderItems, products, returnRequests } from "@/db";
+import { db, orderItems, products, returnRequests } from "@/db";
 import { desc } from "drizzle-orm";
 import { formatPrice, cn } from "@/lib/utils";
 import { checkReturnEligibility } from "@/lib/returns";
+import { resolveOrderAccess } from "@/lib/order-access";
 
 const STATUS_FLOW = ["pending", "paid", "processing", "shipped", "delivered"] as const;
 
-export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function OrderDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ t?: string }>;
+}) {
   const { id } = await params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect(`/sign-in?next=/orders/${id}`);
-
-  const [order] = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
-  if (!order) notFound();
-  if (order.userId && order.userId !== user.id) notFound();
+  const { t: token } = await searchParams;
+  const access = await resolveOrderAccess(id, token);
+  if (!access.ok) {
+    if (access.reason === "not-found") notFound();
+    if (access.reason === "needs-sign-in") redirect(`/sign-in?next=/orders/${id}`);
+    notFound();
+  }
+  const { order } = access;
+  // Preserve the guest token on outbound links from this page.
+  const linkQs = access.viewer === "guest-token" && token ? `?t=${encodeURIComponent(token)}` : "";
 
   const items = await db
     .select({
@@ -63,11 +72,11 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             {order.status}
           </Badge>
           <Button asChild variant="outline" size="sm">
-            <a href={`/api/orders/${order.id}/invoice.pdf`} target="_blank" rel="noreferrer">
+            <a href={`/api/orders/${order.id}/invoice.pdf${linkQs}`} target="_blank" rel="noreferrer">
               <FileDown className="size-4" /> Invoice
             </a>
           </Button>
-          {elig.eligible && (
+          {elig.eligible && access.viewer !== "guest-token" && (
             <Button asChild size="sm">
               <Link href={`/orders/${order.id}/return`}>
                 <RotateCcw className="size-4" /> Request Return

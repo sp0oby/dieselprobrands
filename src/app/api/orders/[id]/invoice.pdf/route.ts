@@ -1,24 +1,21 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
-import { db, orders } from "@/db";
 import { fetchInvoicePdf } from "@/lib/zoho/books-sync";
-import { createClient } from "@/lib/supabase/server";
+import { resolveOrderAccess } from "@/lib/order-access";
 
 export const runtime = "nodejs";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  const [order] = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
-  if (!order) return new NextResponse("not found", { status: 404 });
-  if (order.userId && user?.id !== order.userId) {
-    const allow = (process.env.ADMIN_EMAILS ?? "").split(",").map((s) => s.trim().toLowerCase());
-    if (!user?.email || !allow.includes(user.email.toLowerCase())) {
+  const token = new URL(req.url).searchParams.get("t");
+  const access = await resolveOrderAccess(id, token);
+  if (!access.ok) {
+    if (access.reason === "not-found") return new NextResponse("not found", { status: 404 });
+    if (access.reason === "needs-sign-in") {
       return NextResponse.redirect(new URL(`/sign-in?next=/orders/${id}`, req.url));
     }
+    return new NextResponse("forbidden", { status: 403 });
   }
+  const { order } = access;
 
   if (order.zohoInvoiceId) {
     const buf = await fetchInvoicePdf(order.zohoInvoiceId);
@@ -33,6 +30,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     }
   }
 
-  // Fall back to the print-friendly HTML page.
-  return NextResponse.redirect(new URL(`/orders/${id}/invoice`, req.url));
+  // Fall back to the print-friendly HTML page (carry the access token if any).
+  const fallback = new URL(`/orders/${id}/invoice`, req.url);
+  if (access.viewer === "guest-token" && token) fallback.searchParams.set("t", token);
+  return NextResponse.redirect(fallback);
 }

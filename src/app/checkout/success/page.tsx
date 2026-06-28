@@ -46,7 +46,15 @@ export default async function CheckoutSuccessPage({ searchParams }: { searchPara
           </dl>
         )}
         <div className="mt-8 flex justify-center gap-3">
-          <Button asChild><Link href="/orders">View Orders</Link></Button>
+          {order && !order.userId ? (
+            // Guest checkout: send them to their order via the session-id access token
+            // since they don't have an account to log into.
+            <Button asChild>
+              <Link href={`/orders/${order.id}?t=${encodeURIComponent(session_id)}`}>View Order</Link>
+            </Button>
+          ) : (
+            <Button asChild><Link href="/orders">View Orders</Link></Button>
+          )}
           <Button asChild variant="outline"><Link href="/shop">Continue Shopping</Link></Button>
         </div>
       </div>

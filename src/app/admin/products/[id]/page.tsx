@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { db, products, brands, categories } from "@/db";
+import { assertAdmin } from "@/lib/admin";
 
 async function updateProduct(formData: FormData) {
   "use server";
+  await assertAdmin();
   const id = String(formData.get("id"));
   await db
     .update(products)
@@ -28,6 +30,7 @@ async function updateProduct(formData: FormData) {
 
 async function deleteProduct(formData: FormData) {
   "use server";
+  await assertAdmin();
   const id = String(formData.get("id"));
   await db.delete(products).where(eq(products.id, id));
   redirect("/admin/products");

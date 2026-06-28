@@ -5,9 +5,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { db, products, brands, categories } from "@/db";
 import { slugify } from "@/lib/utils";
+import { assertAdmin } from "@/lib/admin";
 
 async function createProduct(formData: FormData) {
   "use server";
+  await assertAdmin();
   const sku = String(formData.get("sku"));
   const name = String(formData.get("name"));
   await db.insert(products).values({

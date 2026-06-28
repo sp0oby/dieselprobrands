@@ -1,27 +1,29 @@
 import { notFound, redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { db, orders, orderItems, profiles, products } from "@/db";
-import { createClient } from "@/lib/supabase/server";
+import { db, orderItems, profiles } from "@/db";
 import { SITE } from "@/lib/site";
 import { formatPrice } from "@/lib/utils";
+import { resolveOrderAccess } from "@/lib/order-access";
 
 // Print-friendly HTML invoice. Users can browser-print-to-PDF.
 // If Zoho Books has the invoice, /api/orders/[id]/invoice.pdf serves the real PDF instead.
 
-export default async function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function InvoicePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ t?: string }>;
+}) {
   const { id } = await params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  const [order] = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
-  if (!order) notFound();
-  // Only the order owner or admins can view
-  if (order.userId && user?.id !== order.userId) {
-    const allow = (process.env.ADMIN_EMAILS ?? "").split(",").map((s) => s.trim().toLowerCase());
-    if (!user?.email || !allow.includes(user.email.toLowerCase())) {
-      redirect(`/sign-in?next=/orders/${id}/invoice`);
-    }
+  const { t: token } = await searchParams;
+  const access = await resolveOrderAccess(id, token);
+  if (!access.ok) {
+    if (access.reason === "not-found") notFound();
+    if (access.reason === "needs-sign-in") redirect(`/sign-in?next=/orders/${id}/invoice`);
+    notFound();
   }
+  const { order } = access;
 
   const items = await db
     .select({

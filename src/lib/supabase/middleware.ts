@@ -32,12 +32,24 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const isProtected = path.startsWith("/account") || path.startsWith("/admin") || path.startsWith("/orders");
+  const isAdminPath = path.startsWith("/admin");
+  const isProtected = path.startsWith("/account") || isAdminPath || path.startsWith("/orders");
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/sign-in";
     url.searchParams.set("next", path);
     return NextResponse.redirect(url);
+  }
+
+  // Defense-in-depth: also reject non-admins at the edge for /admin/*. The
+  // admin layout already checks, but this catches future routes that forget.
+  if (user && isAdminPath) {
+    const allow = (process.env.ADMIN_EMAILS ?? "").split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+    if (!user.email || !allow.includes(user.email.toLowerCase())) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
   }
 
   return response;

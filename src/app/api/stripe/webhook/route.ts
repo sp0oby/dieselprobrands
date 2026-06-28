@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
-import { db, orders, promoCodes, promoRedemptions } from "@/db";
+import { db, orders, promoCodes, promoRedemptions, processedWebhookEvents } from "@/db";
 import { eq, sql } from "drizzle-orm";
 import { clearCart } from "@/lib/cart";
 import { pushSalesOrder } from "@/lib/zoho/inventory-sync";
@@ -20,6 +20,18 @@ export async function POST(req: Request) {
     event = getStripe().webhooks.constructEvent(body, sig, secret);
   } catch (e) {
     return new NextResponse(`webhook signature failed: ${(e as Error).message}`, { status: 400 });
+  }
+
+  // Idempotency: Stripe retries on transient failures. The unique constraint on
+  // processed_webhook_events.id atomically claims this event for processing —
+  // if the insert returns nothing (conflict), we've seen it before.
+  const claimed = await db
+    .insert(processedWebhookEvents)
+    .values({ id: event.id, provider: "stripe", eventType: event.type })
+    .onConflictDoNothing({ target: processedWebhookEvents.id })
+    .returning({ id: processedWebhookEvents.id });
+  if (claimed.length === 0) {
+    return NextResponse.json({ received: true, duplicate: true });
   }
 
   if (event.type === "checkout.session.completed") {
@@ -48,21 +60,29 @@ export async function POST(req: Request) {
         .where(eq(orders.id, orderId))
         .returning();
 
-      // Record promo redemption + increment uses_count
+      // Record promo redemption + increment uses_count. The unique index on
+      // (promo_id, order_id) guarantees we never double-count a redemption,
+      // even if the idempotency check above were ever bypassed.
       const code = session.metadata?.promoCode;
       if (code && updatedOrder?.promoDiscountCents) {
         const [promo] = await db.select().from(promoCodes).where(eq(promoCodes.code, code)).limit(1);
         if (promo) {
-          await db.insert(promoRedemptions).values({
-            promoId: promo.id,
-            orderId: updatedOrder.id,
-            userId: updatedOrder.userId,
-            discountCents: updatedOrder.promoDiscountCents,
-          });
-          await db
-            .update(promoCodes)
-            .set({ usesCount: sql`${promoCodes.usesCount} + 1` })
-            .where(eq(promoCodes.id, promo.id));
+          const inserted = await db
+            .insert(promoRedemptions)
+            .values({
+              promoId: promo.id,
+              orderId: updatedOrder.id,
+              userId: updatedOrder.userId,
+              discountCents: updatedOrder.promoDiscountCents,
+            })
+            .onConflictDoNothing()
+            .returning({ id: promoRedemptions.id });
+          if (inserted.length > 0) {
+            await db
+              .update(promoCodes)
+              .set({ usesCount: sql`${promoCodes.usesCount} + 1` })
+              .where(eq(promoCodes.id, promo.id));
+          }
         }
       }
 

@@ -1,7 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { randomUUID } from "crypto";
-import { and, eq, gt, inArray, isNull, or, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import {
   db, carts, cartItems, products, profiles, customerPriceOverrides,
   promoCodes, promoRedemptions, isDbConfigured,
@@ -226,8 +226,25 @@ export async function applyPromoCode(rawCode: string): Promise<{ ok: true } | { 
   const [row] = await db.select().from(promoCodes).where(eq(promoCodes.code, code)).limit(1);
   if (!row || !row.active) return { ok: false, error: "Invalid or expired code." };
   const now = new Date();
+  if (row.startsAt && row.startsAt > now) return { ok: false, error: "This code is not active yet." };
   if (row.expiresAt && row.expiresAt < now) return { ok: false, error: "This code has expired." };
   if (row.maxUses != null && row.usesCount >= row.maxUses) return { ok: false, error: "This code has been fully redeemed." };
+
+  // Per-customer use limit. Counts only completed redemptions, so a user can
+  // still hold the code in their cart while a previous redemption is pending,
+  // but they can't double-redeem once an order has finalized.
+  if (row.perCustomerUses != null) {
+    const user = await getCurrentUser();
+    if (!user) return { ok: false, error: "Sign in to use this code." };
+    const [{ count }] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(promoRedemptions)
+      .where(and(eq(promoRedemptions.promoId, row.id), eq(promoRedemptions.userId, user.id)));
+    if (count >= row.perCustomerUses) {
+      return { ok: false, error: "You've already used this code." };
+    }
+  }
+
   const { cartId } = await getOrCreateCartId();
   await db.update(carts).set({ promoCode: code }).where(eq(carts.id, cartId));
   return { ok: true };

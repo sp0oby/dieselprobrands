@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
-import { db, productReviews, orders, orderItems, profiles, type ReviewStatus } from "@/db";
+import { db, productReviews, reviewVotes, orders, orderItems, profiles, type ReviewStatus } from "@/db";
 import { createClient } from "@/lib/supabase/server";
 
 const Schema = z.object({
@@ -46,12 +46,27 @@ export async function submitReview(input: unknown): Promise<{ ok: true } | { ok:
   return { ok: true };
 }
 
-export async function voteReviewHelpful(reviewId: string) {
+export async function voteReviewHelpful(reviewId: string): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!/^[0-9a-f-]{36}$/i.test(reviewId)) return { ok: false, error: "Invalid review." };
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Please sign in to vote." };
+
+  // The primary key on (review_id, user_id) makes this idempotent — a second
+  // vote from the same user is a conflict, not a duplicate count.
+  const inserted = await db
+    .insert(reviewVotes)
+    .values({ reviewId, userId: user.id })
+    .onConflictDoNothing()
+    .returning({ reviewId: reviewVotes.reviewId });
+  if (inserted.length === 0) return { ok: false, error: "You've already voted on this review." };
+
   await db
     .update(productReviews)
     .set({ helpfulCount: sql`${productReviews.helpfulCount} + 1` })
     .where(eq(productReviews.id, reviewId));
   revalidatePath("/shop/[slug]", "page");
+  return { ok: true };
 }
 
 async function assertAdmin() {
