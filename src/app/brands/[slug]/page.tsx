@@ -16,7 +16,7 @@ export default async function BrandDetailPage({ params }: { params: Promise<{ sl
   const brand = BRANDS.find((b) => b.slug === slug);
   if (!brand) notFound();
 
-  const rows = await searchProducts({ brand: slug });
+  const { items: rows } = await searchProducts({ brand: slug });
 
   return (
     <>

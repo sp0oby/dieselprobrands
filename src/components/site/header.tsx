@@ -81,6 +81,18 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
         </div>
       </div>
 
+      {/* mobile search — always visible on small screens, doesn't depend on menu state */}
+      <form action="/shop" method="GET" className="container-x pb-3 lg:hidden">
+        <div className="relative w-full">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-dim" />
+          <input
+            name="q"
+            placeholder="Search for parts..."
+            className="h-10 w-full rounded-md border border-black/10 bg-bg-panel pl-10 pr-3 text-sm text-ink placeholder:text-ink-dim focus-visible:border-brand/60 focus-visible:outline-none"
+          />
+        </div>
+      </form>
+
       {/* mobile menu */}
       <div className={cn("lg:hidden border-t border-black/[0.06]", open ? "block" : "hidden")}>
         <div className="container-x py-3 flex flex-col gap-1">

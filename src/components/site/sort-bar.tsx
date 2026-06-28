@@ -1,5 +1,4 @@
 "use client";
-import { SlidersHorizontal } from "lucide-react";
 
 const SORTS = [
   { value: "featured", label: "Featured" },
@@ -26,13 +25,6 @@ export function SortBar({
       {engine && <input type="hidden" name="engine" value={engine} />}
       <input type="hidden" name="price" value={priceRange} />
       {inStockOnly && <input type="hidden" name="stock" value="1" />}
-      <button
-        type="button"
-        aria-label="Open filters"
-        className="grid size-10 place-items-center rounded-md bg-brand text-white shadow-[0_8px_24px_-8px_rgba(211,47,47,0.6)] lg:hidden"
-      >
-        <SlidersHorizontal className="size-4" />
-      </button>
       <select
         name="sort"
         defaultValue={sort}

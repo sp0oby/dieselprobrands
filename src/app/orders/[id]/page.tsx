@@ -137,7 +137,7 @@ export default async function OrderDetailPage({
             <div key={it.id} className="grid grid-cols-[80px,1fr,auto] items-center gap-4 p-4 sm:p-6">
               <div className="relative aspect-square w-full overflow-hidden rounded-md bg-bg-elev">
                 {it.imageUrl ? (
-                  <Image src={it.imageUrl} alt={it.productName} fill className="object-cover" unoptimized />
+                  <Image src={it.imageUrl} alt={it.productName} fill sizes="96px" className="object-cover" />
                 ) : (
                   <div className="grid h-full w-full place-items-center text-2xl text-ink-dim">⚙️</div>
                 )}

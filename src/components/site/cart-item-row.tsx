@@ -25,7 +25,7 @@ export function CartItemRow({ line }: { line: CartItemRowLine }) {
     <div className="grid grid-cols-[80px,1fr,auto] items-center gap-4 p-4 sm:grid-cols-[100px,1fr,auto,auto] sm:gap-6 sm:p-6">
       <div className="relative aspect-square w-full overflow-hidden rounded-md bg-bg-elev">
         {line.imageUrl ? (
-          <Image src={line.imageUrl} alt={line.name} fill className="object-cover" unoptimized />
+          <Image src={line.imageUrl} alt={line.name} fill sizes="96px" className="object-cover" />
         ) : (
           <div className="grid h-full w-full place-items-center text-2xl text-ink-dim">⚙️</div>
         )}

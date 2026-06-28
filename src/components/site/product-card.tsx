@@ -42,9 +42,8 @@ export function ProductCard({ p, initialWished = false }: { p: ProductCardProduc
               src={p.imageUrl}
               alt={p.name}
               fill
-              sizes="(max-width: 768px) 50vw, 25vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
-              unoptimized
               onError={() => setImgFailed(true)}
             />
           ) : (

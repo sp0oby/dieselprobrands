@@ -35,7 +35,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <div className="mt-6 grid gap-10 lg:grid-cols-2">
         <div className="card-surface relative aspect-square overflow-hidden">
           {product.imageUrl ? (
-            <Image src={product.imageUrl} alt={product.name} fill className="object-cover" unoptimized priority />
+            <Image src={product.imageUrl} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" priority />
           ) : (
             <div className="grid h-full w-full place-items-center text-6xl text-ink-dim">⚙️</div>
           )}

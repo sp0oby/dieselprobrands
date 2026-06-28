@@ -95,6 +95,8 @@ export async function listHotDeals(limit = 8) {
 
 export type Sort = "featured" | "price-asc" | "price-desc" | "name-asc" | "best-rated";
 
+export const SHOP_PAGE_SIZE = 36;
+
 export async function searchProducts(params: {
   category?: string;
   brand?: string;
@@ -103,7 +105,8 @@ export async function searchProducts(params: {
   priceRange?: "under-200" | "200-500" | "500-1000" | "1000-plus" | "all";
   inStockOnly?: boolean;
   sort?: Sort;
-}) {
+  page?: number;
+}): Promise<{ items: ProductCardProduct[]; total: number; page: number; pageSize: number }> {
   const conditions = [];
   if (params.category && params.category !== "all") conditions.push(eq(products.categorySlug, params.category));
   if (params.brand) conditions.push(eq(products.brandSlug, params.brand));
@@ -123,6 +126,9 @@ export async function searchProducts(params: {
     conditions.push(sql`${products.priceCents} >= ${lo} AND ${products.priceCents} < ${hi}`);
   }
 
+  const page = Math.max(1, params.page ?? 1);
+  const offset = (page - 1) * SHOP_PAGE_SIZE;
+
   if (!isDbConfigured()) {
     let cards = seedAsCards();
     if (params.category && params.category !== "all") cards = cards.filter((c) => SEED_PRODUCTS.find((p) => p.slug === c.slug)?.category === params.category);
@@ -132,11 +138,16 @@ export async function searchProducts(params: {
       cards = cards.filter((c) => JSON.stringify(SEED_PRODUCTS.find((p) => p.slug === c.slug)?.specs ?? {}).toLowerCase().includes(eng));
     }
     if (params.q) cards = cards.filter((c) => c.name.toLowerCase().includes(params.q!.toLowerCase()) || c.sku.toLowerCase().includes(params.q!.toLowerCase()));
-    return cards;
+    const total = cards.length;
+    return { items: cards.slice(offset, offset + SHOP_PAGE_SIZE), total, page, pageSize: SHOP_PAGE_SIZE };
   }
   try {
     let q = baseQuery();
-    if (conditions.length) q = q.where(and(...conditions)) as typeof q;
+    let countQ = db.select({ count: sql<number>`count(*)::int` }).from(products);
+    if (conditions.length) {
+      q = q.where(and(...conditions)) as typeof q;
+      countQ = countQ.where(and(...conditions)) as typeof countQ;
+    }
 
     switch (params.sort) {
       case "price-asc": q = q.orderBy(asc(products.priceCents)) as typeof q; break;
@@ -145,9 +156,17 @@ export async function searchProducts(params: {
       case "best-rated": q = q.orderBy(desc(products.rating), desc(products.reviewCount)) as typeof q; break;
       default: q = q.orderBy(desc(products.reviewCount)) as typeof q;
     }
-    const rows = await q;
-    return rows.map(toCard);
-  } catch { return seedAsCards(); }
+    const [rows, [{ count }]] = await Promise.all([
+      (q as typeof q & { limit: (n: number) => typeof q; offset: (n: number) => typeof q })
+        .limit(SHOP_PAGE_SIZE)
+        .offset(offset),
+      countQ,
+    ]);
+    return { items: rows.map(toCard), total: Number(count), page, pageSize: SHOP_PAGE_SIZE };
+  } catch {
+    const cards = seedAsCards();
+    return { items: cards.slice(0, SHOP_PAGE_SIZE), total: cards.length, page, pageSize: SHOP_PAGE_SIZE };
+  }
 }
 
 export async function getProductDetail(slug: string) {

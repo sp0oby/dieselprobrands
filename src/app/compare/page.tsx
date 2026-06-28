@@ -80,7 +80,7 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
                 <th key={p.slug} className="text-left">
                   <Link href={`/shop/${p.slug}`} className="block card-surface p-3 hover:border-black/[0.12]">
                     <div className="relative aspect-square w-full overflow-hidden rounded-md bg-bg-elev">
-                      {p.imageUrl && <Image src={p.imageUrl} alt={p.name} fill className="object-cover" unoptimized />}
+                      {p.imageUrl && <Image src={p.imageUrl} alt={p.name} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />}
                       {p.badge && <div className="absolute left-2 top-2"><ProductBadge kind={p.badge} /></div>}
                     </div>
                     <p className="mt-3 line-clamp-2 text-sm font-semibold text-ink">{p.name}</p>

@@ -34,6 +34,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   const inStockOnly = sp.stock === "1";
   const sort = (sp.sort as Sort) ?? "featured";
   const q = sp.q;
+  const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
 
   // If the search query looks like an OEM part number (has digits, no spaces),
   // first check the cross-reference index — single direct hit redirects to the OEM page.
@@ -44,17 +45,22 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     }
   }
 
-  const items = await searchProducts({ category, brand, engine, priceRange, inStockOnly, sort, q });
+  const { items, total, pageSize } = await searchProducts({ category, brand, engine, priceRange, inStockOnly, sort, q, page });
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   // Sidebar filters represent "browse this slice of the catalog" rather than
   // "refine my search", so applying a category/price/availability filter clears
   // any active search term. Sort changes preserve q (purely cosmetic).
+  // Filter changes also reset back to page 1 — staying on page 6 of a different
+  // result set isn't useful.
   const link = (overrides: Record<string, string | undefined>) => {
     const next = new URLSearchParams();
     const browsing = "category" in overrides || "brand" in overrides || "engine" in overrides || "price" in overrides || "stock" in overrides;
+    const navigating = "page" in overrides;
     const merge = {
       category, brand, engine, price: priceRange, stock: inStockOnly ? "1" : undefined, sort,
       q: browsing ? undefined : q,
+      page: navigating ? overrides.page : undefined,
       ...overrides,
     };
     Object.entries(merge).forEach(([k, v]) => { if (v && v !== "all") next.set(k, v); });
@@ -68,8 +74,11 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
         <div>
           <h1 className="text-4xl font-extrabold text-ink">Shop Diesel Parts</h1>
           <p className="mt-2 text-ink-muted">
-            <span className="text-ink font-semibold">{items.length}</span> products
+            <span className="text-ink font-semibold">{total.toLocaleString()}</span> products
             {q ? <> matching <span className="text-ink font-semibold">"{q}"</span></> : " available"}
+            {totalPages > 1 && (
+              <span className="text-ink-dim"> — page {page} of {totalPages}</span>
+            )}
           </p>
           {q && (
             <Link
@@ -83,8 +92,20 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
         <SortBar category={category} brand={brand} engine={engine} priceRange={priceRange} inStockOnly={inStockOnly} sort={sort} />
       </div>
 
-      <div className="mt-10 grid gap-8 lg:grid-cols-[260px,1fr]">
-        <aside className="space-y-8">
+      {/* Mobile-only "Show filters" toggle. The hidden checkbox below is the
+          peer that controls aside visibility — no JS needed. On lg+ the aside
+          is always shown, the toggle hidden. */}
+      <label
+        htmlFor="show-filters"
+        className="mt-6 flex cursor-pointer items-center justify-between rounded-md border border-black/10 bg-bg-panel px-4 py-3 text-sm font-semibold text-ink lg:hidden"
+      >
+        <span>Filters</span>
+        <span className="text-ink-muted">▾</span>
+      </label>
+      <input id="show-filters" type="checkbox" className="peer hidden" />
+
+      <div className="mt-4 grid gap-8 lg:mt-10 lg:grid-cols-[260px,1fr]">
+        <aside className="hidden space-y-8 peer-checked:block lg:block">
           <FilterGroup title="Categories">
             <FilterLink href={link({ category: undefined })} active={category === "all"}>All Parts</FilterLink>
             {CATEGORIES.map((c) => (
@@ -171,9 +192,38 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
               No products match your filters.
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {items.map((p) => <ProductCard key={p.id} p={p} />)}
-            </div>
+            <>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((p) => <ProductCard key={p.id} p={p} />)}
+              </div>
+              {totalPages > 1 && (
+                <nav className="mt-10 flex items-center justify-between gap-4" aria-label="Pagination">
+                  <Link
+                    href={page > 1 ? link({ page: String(page - 1) }) : "#"}
+                    aria-disabled={page <= 1}
+                    className={cn(
+                      "rounded-md border border-black/10 px-4 py-2 text-sm",
+                      page <= 1 ? "pointer-events-none text-ink-dim" : "text-ink hover:bg-black/5",
+                    )}
+                  >
+                    ← Previous
+                  </Link>
+                  <span className="text-sm text-ink-muted">
+                    Page <span className="font-semibold text-ink">{page}</span> of {totalPages}
+                  </span>
+                  <Link
+                    href={page < totalPages ? link({ page: String(page + 1) }) : "#"}
+                    aria-disabled={page >= totalPages}
+                    className={cn(
+                      "rounded-md border border-black/10 px-4 py-2 text-sm",
+                      page >= totalPages ? "pointer-events-none text-ink-dim" : "text-ink hover:bg-black/5",
+                    )}
+                  >
+                    Next →
+                  </Link>
+                </nav>
+              )}
+            </>
           )}
         </section>
       </div>
