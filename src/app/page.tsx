@@ -20,7 +20,7 @@ export default async function HomePage() {
       {/* HERO — the banner image carries the headline, product photos, and
           trust strip (Longest Warranty / Premium Quality / Expert Support /
           Fast Turnaround) so the page chrome around it stays minimal. */}
-      <section className="relative isolate">
+      <section className="relative">
         <div className="relative aspect-[3/1] w-full overflow-hidden bg-black">
           <Image
             src="/hero.webp"
@@ -31,13 +31,14 @@ export default async function HomePage() {
             priority
           />
         </div>
-        {/* Quick CTAs below the banner — sits flush so the visual flow stays
-            unbroken. Buttons are the only chrome we add over the baked-in art. */}
-        <div className="container-x -mt-6 flex flex-wrap justify-center gap-3 sm:-mt-8 lg:-mt-10">
+        {/* Quick CTAs sit cleanly below the banner with breathing room. The
+            banner's bottom red stripe is part of the art, so the buttons live
+            below it rather than crossing it. */}
+        <div className="container-x flex flex-wrap justify-center gap-3 py-8 lg:py-10">
           <Button asChild size="lg">
             <Link href="/shop">Shop Parts <ArrowRight /></Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="bg-bg/90 backdrop-blur">
+          <Button asChild size="lg" variant="outline">
             <Link href="/contact">Talk to an Expert</Link>
           </Button>
         </div>
