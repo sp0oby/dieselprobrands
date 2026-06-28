@@ -47,16 +47,36 @@ export default async function HomePage() {
       {/* SHOP BY CATEGORY */}
       <section className="container-x py-14 lg:py-16">
         <SectionHeader title="Shop by Category" subtitle="Find exactly what you need" cta={{ label: "View All", href: "/shop" }} />
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {categories.map((c) => (
             <Link
               key={c.slug}
               href={`/shop?category=${c.slug}`}
-              className="group flex flex-col items-center gap-2 rounded-xl border border-black/[0.06] bg-bg-card p-4 text-center transition-all hover:border-brand/40 hover:-translate-y-0.5"
+              className="group flex flex-col overflow-hidden rounded-xl border border-black/[0.06] bg-bg-card transition-all hover:border-brand/40 hover:-translate-y-0.5 hover:shadow-md"
             >
-              <CategoryIcon slug={c.slug} />
-              <h3 className="mt-1 text-sm font-semibold text-ink group-hover:text-brand-600">{c.name}</h3>
-              <p className="text-xs text-ink-muted"><span className="text-brand-600 font-semibold">{c.count.toLocaleString()}</span> items</p>
+              <div className="relative aspect-square w-full overflow-hidden bg-bg-elev">
+                {c.imageUrl ? (
+                  <Image
+                    src={c.imageUrl}
+                    alt={c.name}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="grid h-full w-full place-items-center">
+                    <CategoryIcon slug={c.slug} />
+                  </div>
+                )}
+                {/* subtle inner gradient at bottom for label contrast */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/30 to-transparent" />
+              </div>
+              <div className="p-3 text-center">
+                <h3 className="text-sm font-semibold text-ink group-hover:text-brand-600">{c.name}</h3>
+                <p className="mt-0.5 text-xs text-ink-muted">
+                  <span className="text-brand-600 font-semibold">{c.count.toLocaleString()}</span> items
+                </p>
+              </div>
             </Link>
           ))}
         </div>

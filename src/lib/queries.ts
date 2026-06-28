@@ -215,16 +215,35 @@ export async function getProductDetail(slug: string) {
 // Pull real per-category product counts from the DB so homepage + shop
 // always show accurate numbers (the static CATEGORIES list is just for
 // slug/name/icon ordering — counts there are seed placeholders).
-export async function listCategoriesWithCounts(): Promise<Array<typeof CATEGORIES[number] & { count: number }>> {
-  if (!isDbConfigured()) return [...CATEGORIES];
+export async function listCategoriesWithCounts(): Promise<Array<typeof CATEGORIES[number] & { count: number; imageUrl: string | null }>> {
+  if (!isDbConfigured()) return CATEGORIES.map((c) => ({ ...c, imageUrl: null }));
   try {
-    const rows = await db
+    const countRows = await db
       .select({ slug: categories.slug, count: sql<number>`coalesce(${categories.productCount}, 0)` })
       .from(categories);
-    const countBySlug = new Map(rows.map((r) => [r.slug, Number(r.count)]));
-    return CATEGORIES.map((c) => ({ ...c, count: countBySlug.get(c.slug) ?? 0 }));
+    const countBySlug = new Map(countRows.map((r) => [r.slug, Number(r.count)]));
+
+    // One representative image per category — pick the highest-rated in-stock
+    // product that has an image. DISTINCT ON (category_slug) collapses to one
+    // row per category in a single round-trip.
+    const imageRows = await db.execute(sql`
+      SELECT DISTINCT ON (category_slug) category_slug, image_url
+      FROM products
+      WHERE image_url IS NOT NULL AND image_url <> '' AND in_stock = true
+      ORDER BY category_slug, rating DESC NULLS LAST, review_count DESC NULLS LAST
+    `);
+    const imageBySlug = new Map<string, string>();
+    for (const r of imageRows as unknown as Array<{ category_slug: string; image_url: string }>) {
+      imageBySlug.set(r.category_slug, r.image_url);
+    }
+
+    return CATEGORIES.map((c) => ({
+      ...c,
+      count: countBySlug.get(c.slug) ?? 0,
+      imageUrl: imageBySlug.get(c.slug) ?? null,
+    }));
   } catch {
-    return [...CATEGORIES];
+    return CATEGORIES.map((c) => ({ ...c, imageUrl: null }));
   }
 }
 
