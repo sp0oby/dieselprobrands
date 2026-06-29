@@ -1,6 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+
+// Cache product detail pages for 1 hour. Prices and stock change rarely
+// and the shop list is the source of truth for "is this in stock today" —
+// caching here gives near-instant loads on repeat hits.
+export const revalidate = 3600;
 import { Check, ShieldCheck, Truck, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductBadge } from "@/components/ui/badge";

@@ -5,6 +5,10 @@ const config: NextConfig = {
   async redirects() {
     return [
       { source: "/returns", destination: "/returns-warranty", permanent: true },
+      { source: "/register", destination: "/sign-up", permanent: true },
+      { source: "/login", destination: "/sign-in", permanent: true },
+      { source: "/signup", destination: "/sign-up", permanent: true },
+      { source: "/signin", destination: "/sign-in", permanent: true },
     ];
   },
   images: {

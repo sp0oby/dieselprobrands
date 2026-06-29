@@ -102,8 +102,18 @@ export default function ReturnsWarrantyPage() {
           </Block>
 
           <Block title="How to Initiate a Return">
+            <div className="card-surface mb-5 p-5">
+              <h4 className="font-bold text-ink">Start your return online</h4>
+              <p className="mt-2 text-sm text-ink-muted">
+                Open the order you want to return and submit the request — we'll email an RMA number and return-shipping instructions within 24 hours.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Button asChild><Link href="/orders">Go to My Orders <ArrowRight /></Link></Button>
+                <Button asChild variant="outline"><Link href="/track-order">Look up an order</Link></Button>
+              </div>
+            </div>
             <Steps items={[
-              { n: 1, title: "Request RMA Number", body: "Contact our customer service team via phone or email with your order number and reason for return. We'll issue an RMA number within 24 hours." },
+              { n: 1, title: "Submit your return", body: "Sign in, open your order under My Orders, click \"Request a return,\" pick the items and reason, and submit. We'll issue an RMA number within 24 hours." },
               { n: 2, title: "Package the Item", body: "Carefully package the part in its original box with all accessories. Write the RMA number clearly on the outside of the package." },
               { n: 3, title: "Ship the Return", body: "Ship to the address provided with your RMA. We recommend using a carrier with tracking. Save your tracking number for reference." },
               { n: 4, title: "Receive Your Refund", body: "Once we receive and inspect your return, we'll process your refund within 5-7 business days to your original payment method." },
