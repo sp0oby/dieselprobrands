@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/site/product-card";
 import { CategoryIcon } from "@/components/site/category-icon";
 import { listHotDeals, listCategoriesWithCounts } from "@/lib/queries";
-import { BRANDS } from "@/lib/site";
+import { BRANDS, hasBrandLogo } from "@/lib/site";
 import { BrandLogo } from "@/components/site/brand-logo";
 
 export default async function HomePage() {
@@ -13,7 +13,9 @@ export default async function HomePage() {
     listHotDeals(8),
     listCategoriesWithCounts(),
   ]);
-  const featuredBrands = BRANDS.filter((b) => b.featured).slice(0, 12);
+  // Only show brands whose real logo art is on disk — the wordmark fallback
+  // doesn't look right alongside real logos.
+  const featuredBrands = BRANDS.filter(hasBrandLogo).slice(0, 12);
 
   return (
     <>
@@ -116,9 +118,9 @@ export default async function HomePage() {
                   <p className="text-[11px] text-ink-muted">
                     <span className="text-brand-600 font-semibold">{b.count.toLocaleString()}</span> products
                   </p>
-                ) : (
+                ) : b.slug === "dpb" ? (
                   <p className="text-[11px] font-semibold text-brand-600">House Brand</p>
-                )}
+                ) : null}
                 <p className="text-[9px] uppercase tracking-wider text-ink-dim">{b.category}</p>
               </Link>
             ))}

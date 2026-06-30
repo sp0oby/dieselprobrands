@@ -24,9 +24,9 @@ export function BrandLogo({
   const [imgFailed, setImgFailed] = useState(false);
 
   const dims = {
-    sm: { box: "h-10", img: 32 },
-    md: { box: "h-14", img: 48 },
-    lg: { box: "h-20", img: 72 },
+    sm: { box: "h-12", img: 40 },
+    md: { box: "h-20", img: 72 },
+    lg: { box: "h-28", img: 100 },
   }[size];
 
   const src = brand.logoSrc ?? `/brands/${brand.slug}.png`;

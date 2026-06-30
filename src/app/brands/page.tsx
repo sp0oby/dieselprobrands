@@ -45,9 +45,9 @@ export default async function BrandsPage({ searchParams }: { searchParams: Promi
                 <p className="text-xs text-ink-muted">
                   <span className="text-brand-600 font-semibold">{b.count.toLocaleString()}</span> parts
                 </p>
-              ) : (
+              ) : b.slug === "dpb" ? (
                 <p className="text-xs font-semibold text-brand-600">House Brand</p>
-              )}
+              ) : null}
             </Link>
           ))}
         </div>
@@ -94,10 +94,14 @@ export default async function BrandsPage({ searchParams }: { searchParams: Promi
                 <span className="inline-flex items-center gap-1"><Globe className="size-3.5" /> {b.country}</span>
                 <span>Est. {b.founded}</span>
               </div>
-              <div className="hairline pt-3 text-sm">
-                <span className="font-bold text-brand-400">{b.count.toLocaleString()}</span>
-                <span className="text-ink-muted"> parts available</span>
-              </div>
+              {b.count > 0 ? (
+                <div className="hairline pt-3 text-sm">
+                  <span className="font-bold text-brand-400">{b.count.toLocaleString()}</span>
+                  <span className="text-ink-muted"> parts available</span>
+                </div>
+              ) : b.slug === "dpb" ? (
+                <div className="hairline pt-3 text-sm font-semibold text-brand-600">House Brand</div>
+              ) : null}
             </Link>
           ))}
         </div>

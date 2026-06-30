@@ -36,7 +36,9 @@ export default async function BrandDetailPage({ params }: { params: Promise<{ sl
               <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-ink-muted">
                 <span className="inline-flex items-center gap-2"><Globe className="size-4 text-brand-400" /> {brand.country}</span>
                 <span>Est. {brand.founded}</span>
-                <span className="text-brand-400 font-semibold">{brand.count.toLocaleString()} parts</span>
+                {brand.count > 0 && (
+                  <span className="text-brand-400 font-semibold">{brand.count.toLocaleString()} parts</span>
+                )}
               </div>
             </div>
             <Button asChild size="lg">
