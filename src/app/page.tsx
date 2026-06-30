@@ -23,11 +23,22 @@ export default async function HomePage() {
           trust strip (Longest Warranty / Premium Quality / Expert Support /
           Fast Turnaround) so the page chrome around it stays minimal. */}
       <section className="relative">
-        {/* aspect ratio matches the source art (1983x793, ~2.5:1) so nothing
-            gets cropped at the sides on a desktop viewport. */}
-        <div className="relative aspect-[1983/793] w-full overflow-hidden bg-black">
+        {/* Mobile: portrait hero (864x1821). Hidden on md+ — desktop gets
+            the wider landscape art below. */}
+        <div className="relative aspect-[864/1821] w-full overflow-hidden bg-black md:hidden">
           <Image
-            src="/hero-v2.webp"
+            src="/hero-mobile-v3.webp"
+            alt="Diesel Pro Brands — America's Parts Professionals. Turbochargers, fuel pumps, fuel injectors, engine parts and more."
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+            priority
+          />
+        </div>
+        {/* Desktop / tablet: landscape hero (1717x916, ~1.87:1). */}
+        <div className="relative hidden aspect-[1717/916] w-full overflow-hidden bg-black md:block">
+          <Image
+            src="/hero-v3.webp"
             alt="Diesel Pro Brands — America's Parts Professionals. Turbochargers, fuel pumps, fuel injectors, engine parts and more."
             fill
             sizes="100vw"
