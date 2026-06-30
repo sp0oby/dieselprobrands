@@ -23,9 +23,11 @@ export default async function HomePage() {
           trust strip (Longest Warranty / Premium Quality / Expert Support /
           Fast Turnaround) so the page chrome around it stays minimal. */}
       <section className="relative">
-        <div className="relative aspect-[3/1] w-full overflow-hidden bg-black">
+        {/* aspect ratio matches the source art (1983x793, ~2.5:1) so nothing
+            gets cropped at the sides on a desktop viewport. */}
+        <div className="relative aspect-[1983/793] w-full overflow-hidden bg-black">
           <Image
-            src="/hero.webp"
+            src="/hero-v2.webp"
             alt="Diesel Pro Brands — America's Parts Professionals. Turbochargers, fuel pumps, fuel injectors, engine parts and more."
             fill
             sizes="100vw"
