@@ -1,8 +1,8 @@
 export const SITE = {
   name: "Diesel Pro Brands",
-  tagline: "VGT Turbo Experts",
+  tagline: "America's Parts Professionals",
   description:
-    "Turbo, fuel pump & fuel injector experts. Serving agricultural, highway, construction, and marine industries with the longest warranty in the business.",
+    "America's Parts Professionals. Specializing in turbochargers, fuel pumps, fuel injectors, engine parts & more; for agricultural, highway, construction, and marine industries.",
   phone: "(866) 999-4361",
   phoneHref: "tel:+18669994361",
   emailSupport: "support@dieselprobrands.com",
@@ -49,7 +49,7 @@ export type Brand = {
   slug: string;
   name: string;        // short / all-caps display on brand grid
   displayName: string; // proper-case display on product cards (matches Figma)
-  category: "Engine Manufacturer" | "Fuel Systems" | "Turbochargers" | "Filters" | "Electrical" | "Cooling" | "Engine Components";
+  category: "Engine Manufacturer" | "Fuel Systems" | "Turbochargers" | "Filters" | "Electrical" | "Cooling" | "Engine Components" | "House Brand";
   country: string;
   founded: number;
   description: string;
@@ -59,9 +59,12 @@ export type Brand = {
   color: string;
   /** Officially-recommended domain — used by drop-in logo helpers like /scripts/fetch-brand-logos.mjs. */
   domain?: string;
+  /** Override path for the brand logo image. Defaults to /brands/{slug}.png. */
+  logoSrc?: string;
 };
 
 export const BRANDS: Brand[] = [
+  { slug: "dpb",            name: "DPB",         displayName: "Diesel Pro Brands", category: "House Brand",       country: "USA",         founded: 2020, description: "Our in-house line — VGT turbochargers, fuel pumps, fuel injectors, and engine parts engineered to OEM-spec and backed by our 2-year warranty.", count: 0,    featured: true,  color: "#C8102E", domain: "dieselprobrands.com", logoSrc: "/dpb-logo.png" },
   { slug: "cummins",        name: "CUMMINS",     displayName: "Cummins",         category: "Engine Manufacturer", country: "USA",         founded: 1919, description: "World leader in diesel engines and power generation equipment. Known for reliability and innovation in heavy-duty applications.", count: 1247, featured: true,  color: "#C8102E", domain: "cummins.com" },
   { slug: "detroit-diesel", name: "DETROIT",     displayName: "Detroit Diesel",  category: "Engine Manufacturer", country: "USA",         founded: 1938, description: "Premium diesel engines for heavy-duty trucks and industrial applications. Part of Daimler Trucks North America.",          count: 892,  featured: true,  color: "#1F3864", domain: "demanddetroit.com" },
   { slug: "caterpillar",    name: "CAT",         displayName: "Caterpillar",     category: "Engine Manufacturer", country: "USA",         founded: 1925, description: "Global leader in construction and mining equipment, diesel engines, and industrial gas turbines.",                          count: 1456, featured: true,  color: "#FFCD11", domain: "cat.com" },
@@ -95,6 +98,7 @@ export const BRANDS: Brand[] = [
 
 export const BRAND_CATEGORY_FILTERS = [
   "All Brands",
+  "House Brand",
   "Engine Manufacturer",
   "Fuel Systems",
   "Turbochargers",

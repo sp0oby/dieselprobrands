@@ -29,11 +29,12 @@ export function BrandLogo({
     lg: { box: "h-20", img: 72 },
   }[size];
 
+  const src = brand.logoSrc ?? `/brands/${brand.slug}.png`;
   if (!imgFailed) {
     return (
       <span className={cn("relative inline-flex items-center justify-center", dims.box, className)}>
         <Image
-          src={`/brands/${brand.slug}.png`}
+          src={src}
           alt={brand.displayName}
           width={dims.img * 4}
           height={dims.img}

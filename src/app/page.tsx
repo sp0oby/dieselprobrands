@@ -24,7 +24,7 @@ export default async function HomePage() {
         <div className="relative aspect-[3/1] w-full overflow-hidden bg-black">
           <Image
             src="/hero.webp"
-            alt="DieselPro Brands — Turbo, Fuel Pump &amp; Fuel Injector Experts. Longest warranty in the business."
+            alt="Diesel Pro Brands — America's Parts Professionals. Turbochargers, fuel pumps, fuel injectors, engine parts and more."
             fill
             sizes="100vw"
             className="object-cover object-center"
@@ -112,9 +112,13 @@ export default async function HomePage() {
                 className="group flex flex-col items-center gap-2 rounded-xl border border-black/[0.06] bg-bg-card px-4 py-5 text-center transition-all hover:border-brand/40 hover:-translate-y-0.5"
               >
                 <BrandLogo brand={b} size="md" />
-                <p className="text-[11px] text-ink-muted">
-                  <span className="text-brand-600 font-semibold">{b.count.toLocaleString()}</span> products
-                </p>
+                {b.count > 0 ? (
+                  <p className="text-[11px] text-ink-muted">
+                    <span className="text-brand-600 font-semibold">{b.count.toLocaleString()}</span> products
+                  </p>
+                ) : (
+                  <p className="text-[11px] font-semibold text-brand-600">House Brand</p>
+                )}
                 <p className="text-[9px] uppercase tracking-wider text-ink-dim">{b.category}</p>
               </Link>
             ))}

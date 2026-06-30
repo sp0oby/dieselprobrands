@@ -33,7 +33,7 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
         </div>
       </div>
 
-      <div className="container-x flex h-20 items-center gap-6">
+      <div className="container-x flex h-24 items-center gap-6">
         <Logo />
         <nav className="ml-2 hidden items-center gap-1 lg:flex">
           {NAV.map((n) => (
@@ -47,16 +47,25 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
           ))}
         </nav>
 
-        <form action="/shop" method="GET" className="ml-auto hidden max-w-md flex-1 items-center gap-2 lg:flex">
+        {/* Global parts search — prominent on every page. Submit button keeps it
+            obvious that this is a search, not a filter. */}
+        <form action="/shop" method="GET" className="ml-auto hidden max-w-2xl flex-1 items-center gap-0 lg:flex">
           <div className="relative w-full">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-dim" />
+            <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-ink-dim" />
             <input
               name="q"
-              placeholder="Search for parts..."
-              className="h-10 w-full rounded-md border border-black/10 bg-bg-panel pl-10 pr-12 text-sm text-ink placeholder:text-ink-dim focus-visible:border-brand/60 focus-visible:outline-none"
+              placeholder="Search 12,000+ diesel parts by SKU, brand, or keyword…"
+              className="h-14 w-full rounded-l-lg border-2 border-r-0 border-black/15 bg-white pl-12 pr-3 text-base text-ink placeholder:text-ink-dim focus-visible:border-brand focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/20"
             />
-            <kbd className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 rounded border border-black/10 bg-black/5 px-1.5 py-0.5 text-[10px] text-ink-muted">⌘K</kbd>
           </div>
+          <button
+            type="submit"
+            className="inline-flex h-14 items-center gap-2 rounded-r-lg border-2 border-brand bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/30"
+            aria-label="Search"
+          >
+            <Search className="size-5" />
+            <span className="hidden xl:inline">Search</span>
+          </button>
         </form>
 
         <div className="ml-auto flex items-center gap-1 lg:ml-0">
@@ -83,13 +92,22 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
 
       {/* mobile search — always visible on small screens, doesn't depend on menu state */}
       <form action="/shop" method="GET" className="container-x pb-3 lg:hidden">
-        <div className="relative w-full">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-dim" />
-          <input
-            name="q"
-            placeholder="Search for parts..."
-            className="h-10 w-full rounded-md border border-black/10 bg-bg-panel pl-10 pr-3 text-sm text-ink placeholder:text-ink-dim focus-visible:border-brand/60 focus-visible:outline-none"
-          />
+        <div className="flex w-full items-stretch">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-ink-dim" />
+            <input
+              name="q"
+              placeholder="Search parts, SKUs, brands…"
+              className="h-12 w-full rounded-l-lg border-2 border-r-0 border-black/15 bg-white pl-11 pr-3 text-base text-ink placeholder:text-ink-dim focus-visible:border-brand focus-visible:outline-none"
+            />
+          </div>
+          <button
+            type="submit"
+            className="inline-flex h-12 items-center justify-center rounded-r-lg border-2 border-brand bg-brand px-4 text-white"
+            aria-label="Search"
+          >
+            <Search className="size-5" />
+          </button>
         </div>
       </form>
 

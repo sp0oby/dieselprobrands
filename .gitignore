@@ -11,3 +11,7 @@ dist
 drizzle/meta
 
 .vercel
+
+# Local-only CSV exports for delivery to the client; too large for git.
+exports/
+tsconfig.tsbuildinfo

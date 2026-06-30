@@ -41,9 +41,13 @@ export default async function BrandsPage({ searchParams }: { searchParams: Promi
               className="group flex flex-col items-center gap-2 rounded-xl border border-black/[0.06] bg-bg-card p-4 transition-all hover:border-brand/40 hover:-translate-y-0.5"
             >
               <BrandLogo brand={b} size="md" />
-              <p className="text-xs text-ink-muted">
-                <span className="text-brand-600 font-semibold">{b.count.toLocaleString()}</span> parts
-              </p>
+              {b.count > 0 ? (
+                <p className="text-xs text-ink-muted">
+                  <span className="text-brand-600 font-semibold">{b.count.toLocaleString()}</span> parts
+                </p>
+              ) : (
+                <p className="text-xs font-semibold text-brand-600">House Brand</p>
+              )}
             </Link>
           ))}
         </div>

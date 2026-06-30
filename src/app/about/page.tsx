@@ -26,8 +26,8 @@ export default function AboutPage() {
             About <span className="heading-gradient">Diesel Pro Brands</span>
           </h1>
           <p className="mt-5 max-w-3xl text-lg text-ink-muted">
-            The VGT turbo experts. Specializing in turbochargers, fuel pumps, and fuel injectors for agricultural,
-            highway, construction, and marine diesel engines.
+            America&rsquo;s Parts Professionals. Specializing in turbochargers, fuel pumps, fuel injectors,
+            engine parts &amp; more; for agricultural, highway, construction, and marine industries.
           </p>
           <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 max-w-3xl">
             {[

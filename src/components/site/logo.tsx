@@ -11,12 +11,12 @@ export function Logo({
   className?: string;
   variant?: "full" | "mark";
 }) {
-  // logo-wide-v2.webp is the new DP PRO.com / DIESELPROBRANDS.COM mark,
-  // trimmed to 800x271 (~2.95:1, no whitespace).
-  const heights = { sm: 32, md: 44, lg: 56 } as const;
+  // /dpb-logo.png is the official Diesel Pro Brands logo with the white
+  // background keyed out (D mark + "DIESELPRO BRANDS.COM" wordmark, ~3.34:1).
+  const heights = { sm: 36, md: 52, lg: 68 } as const;
   const h = heights[size];
-  const w = variant === "full" ? Math.round(h * 2.95) : h;
-  const src = variant === "full" ? "/logo-wide-v2.webp" : "/logomark.webp";
+  const w = variant === "full" ? Math.round(h * 3.34) : h;
+  const src = "/dpb-logo.png";
   return (
     <Link href="/" className={cn("inline-flex items-center", className)}>
       <Image
